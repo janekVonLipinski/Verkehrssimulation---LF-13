@@ -7,4 +7,5 @@ import traffic_simulation.model.street_network.Street;
 public class Car {
 
     private final Street currentStreet;
+
 }

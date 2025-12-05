@@ -10,6 +10,29 @@ import java.util.List;
 public class Simulation {
 
 
-    private final SpawnPoint spawnPoint;
+    private final List<SpawnPoint> spawnPoints;
     private final List<Car> cars;
+
+    public void simulate() {
+
+        while (true) {
+            spawnCars();
+            simulateCars();
+        }
+
+    }
+
+    private void spawnCars() {
+        for (SpawnPoint spawnPoint : spawnPoints) {
+            Car car = spawnPoint.spawnCar();
+
+            if (car != null) {
+                cars.add(car);
+            }
+        }
+    }
+
+    private void simulateCars() {
+
+    }
 }

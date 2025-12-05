@@ -1,4 +1,4 @@
-package traffic_simulation.cars;
+package traffic_simulation.model.cars;
 
 import lombok.RequiredArgsConstructor;
 import traffic_simulation.model.street_network.Street;

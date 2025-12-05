@@ -6,7 +6,10 @@ import traffic_simulation.model.street_network.GridPoint;
 
 public class SpawnPoint extends GridPoint {
 
-    public SpawnPoint(double x, double y) {
+    private final double spawnTick;
+
+    public SpawnPoint(double x, double y, double spawnTick) {
         super(x, y);
+        this.spawnTick = spawnTick;
     }
 }

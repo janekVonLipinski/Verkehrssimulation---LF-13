@@ -14,7 +14,7 @@ public class Car {
 
 
     public void drive() {
-
+        //TODO further implementing this method
         Point direction = currentStreet.getDirection();
         double streetLength = currentStreet.getLength();
 

@@ -1,10 +1,10 @@
 package traffic_simulation.model.street_network;
 
 import lombok.RequiredArgsConstructor;
+import traffic_simulation.model.Point;
 
 @RequiredArgsConstructor
-public class GridPoint {
+public abstract class GridPoint {
 
-    private final double x;
-    private final double y;
+    private final Point point;
 }

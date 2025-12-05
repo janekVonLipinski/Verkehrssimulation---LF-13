@@ -1,7 +1,7 @@
 package traffic_simulation.simulation;
 
 import lombok.RequiredArgsConstructor;
-import traffic_simulation.cars.Car;
+import traffic_simulation.model.cars.Car;
 import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 
 import java.util.List;

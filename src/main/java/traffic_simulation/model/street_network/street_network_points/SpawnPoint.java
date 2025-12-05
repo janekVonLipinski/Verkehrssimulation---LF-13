@@ -23,6 +23,7 @@ public class SpawnPoint extends GridPoint {
     public Car spawnCar() {
         currentTick++;
         boolean shouldSpawnCarInThisTick = currentTick % spawnTick == 0;
+        // right now is spawns cars at t = 0
 
         if (!shouldSpawnCarInThisTick) {
             return null;

@@ -1,6 +1,5 @@
 package traffic_simulation.model.cars;
 
-import lombok.AllArgsConstructor;
 import traffic_simulation.model.Point;
 import traffic_simulation.model.street_network.GridPoint;
 import traffic_simulation.model.street_network.Street;
@@ -33,14 +32,26 @@ public class Car {
             Point directionWithVelocity = direction.multiply(velocity); // unitHandling is handled during Car creation
             Point nextPoint = location.add(directionWithVelocity);
 
-            boolean hasReachedEndOfStreet = hasReachedEndOfStreet();
+            Point streetEndpoint1 = currentStreet.getFirstPoint().getPoint();
+            Point streetEndpoint2 = currentStreet.getSecondPoint().getPoint();
+
+            boolean hasReachedStreetEndpoint1 = hasReachedEndOfStreet(nextPoint, streetEndpoint1);
+            boolean hasReachedStreetEndpoint2 = hasReachedEndOfStreet(nextPoint, streetEndpoint2);
+
+            boolean hasReachedEndOfStreet =  hasReachedStreetEndpoint1 || hasReachedStreetEndpoint2;
 
             if (!hasReachedEndOfStreet) {
                 location = nextPoint;
                 return this;
             }
 
-            GridPoint nextGridPoint = getCurrentStreetEndpoint();
+
+            GridPoint nextGridPoint = currentStreet.getFirstPoint();
+
+            if (hasReachedStreetEndpoint2) {
+                nextGridPoint = currentStreet.getSecondPoint();
+            }
+
             Point nextGridPointLocation = nextGridPoint.getPoint();
             
             if (nextGridPoint instanceof SpawnPoint) {
@@ -49,6 +60,7 @@ public class Car {
             
             Crossing crossing = (Crossing) nextGridPoint;
             currentStreet = crossing.getNextStreet();
+            location = nextGridPointLocation;
 
             distanceToDrive = calculateRemainingDistance(nextGridPointLocation, distanceToDrive);
             canDrive = distanceToDrive > 0;
@@ -63,12 +75,32 @@ public class Car {
         return distanceToDrive;
     }
 
-    private boolean hasReachedEndOfStreet() {
-        return true;
-    }
-    
-    private GridPoint getCurrentStreetEndpoint() {
-        //TODO implement
-        return currentStreet.getSecondPoint();
+    private boolean hasReachedEndOfStreet(Point nextPoint, Point destinationPoint) {
+        //TODO is it possible to make this method less ugly
+        double xOrientation = currentStreet.getDirection().getX();
+        double yOrientation = currentStreet.getDirection().getY();
+
+        boolean isXOrientationGreaterZero = xOrientation > 0;
+        boolean isYOrientationGreaterZero = yOrientation > 0;
+
+        boolean hasOverShotInXDirection = nextPoint.getX() > destinationPoint.getX();
+        boolean hasOverShotInYDirection = nextPoint.getY() > destinationPoint.getY();
+
+        boolean hasUnderShotInXDirection = nextPoint.getX() < destinationPoint.getX();
+        boolean hasUnderShotInYDirection = nextPoint.getY() < destinationPoint.getY();
+
+        if (isXOrientationGreaterZero && isYOrientationGreaterZero) {
+            return hasOverShotInXDirection && hasOverShotInYDirection;
+        }
+
+        if (isXOrientationGreaterZero) {
+            return hasOverShotInXDirection && hasOverShotInYDirection;
+        }
+
+        if (isYOrientationGreaterZero) {
+            return hasUnderShotInXDirection && hasOverShotInYDirection;
+        }
+
+        return hasUnderShotInYDirection && hasUnderShotInXDirection;
     }
 }

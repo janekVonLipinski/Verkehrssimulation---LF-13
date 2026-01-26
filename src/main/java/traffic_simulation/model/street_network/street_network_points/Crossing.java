@@ -6,18 +6,28 @@ import traffic_simulation.model.street_network.GridPoint;
 import traffic_simulation.model.street_network.Street;
 
 import java.util.Map;
+import java.util.Random;
 
 
 public class Crossing extends GridPoint {
 
     private final Map<Street, Double> streets;
+    private final Random random = new Random();
 
     public Crossing(double x, double y, Map<Street, Double> streets) {
         super(new Point(x, y));
         this.streets = streets;
     }
 
-    public Street getNextStreet() {
-        return null;
+    public Street getNextStreet(Street currentStreet) {
+
+        var possibleStreets = streets.keySet().stream()
+                .filter(street -> street != currentStreet)
+                .toList();
+
+
+        //TODO implement correct choosing logic, not just a random street
+        int randomStreetIndex = random.nextInt(0, possibleStreets.size() - 1);
+        return possibleStreets.get(randomStreetIndex);
     }
 }

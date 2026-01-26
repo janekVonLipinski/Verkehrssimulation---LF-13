@@ -20,7 +20,8 @@ public class Car {
     }
 
     public Car drive() {
-        double distanceToDrive = velocity; 
+        System.out.println(location);
+        double distanceToDrive = velocity;
         //1 Tick = 1s => a car can drive a distance corresponding to its velocity
         boolean canDrive = true;
         
@@ -57,7 +58,7 @@ public class Car {
             }
             
             Crossing crossing = (Crossing) nextGridPoint;
-            currentStreet = crossing.getNextStreet();
+            currentStreet = crossing.getNextStreet(currentStreet);
             location = nextGridPointLocation;
 
             distanceToDrive = calculateRemainingDistance(nextGridPointLocation, distanceToDrive);

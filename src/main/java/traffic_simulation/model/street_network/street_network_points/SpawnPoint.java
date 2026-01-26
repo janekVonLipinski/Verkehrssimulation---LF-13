@@ -1,6 +1,7 @@
 package traffic_simulation.model.street_network.street_network_points;
 
 
+import lombok.Setter;
 import traffic_simulation.model.Point;
 import traffic_simulation.model.cars.Car;
 import traffic_simulation.model.street_network.GridPoint;
@@ -13,7 +14,9 @@ public class SpawnPoint extends GridPoint {
 
     private final double spawnTick;
     private final Random random = new Random();
-    private final Street street;
+    @Setter
+    private Street street;
+    //TODO rethink this, both street and Point now each other which is inconvenient
     private static final int EXPECTED_VALUE = 45;
     private static final int DEVIATION = 10;
     private int currentTick = 0;

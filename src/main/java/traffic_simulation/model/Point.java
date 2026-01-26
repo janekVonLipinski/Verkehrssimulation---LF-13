@@ -2,9 +2,11 @@ package traffic_simulation.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @RequiredArgsConstructor
 @Getter
+@ToString
 public class Point {
 
     private final double x;

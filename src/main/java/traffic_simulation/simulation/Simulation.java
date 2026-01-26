@@ -12,9 +12,9 @@ public class Simulation {
 
 
     private final List<SpawnPoint> spawnPoints;
-    private List<Car> cars;
+    private List<Car> cars = new ArrayList<>();
 
-    public void simulate(int numberOfGivenTicks) {
+    public List<Car> simulate(int numberOfGivenTicks) {
 
         int ticksDone = 0;
 
@@ -24,6 +24,7 @@ public class Simulation {
             ticksDone++;
         }
 
+        return cars;
     }
 
     private void spawnCars() {

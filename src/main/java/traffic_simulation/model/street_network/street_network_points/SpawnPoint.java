@@ -16,7 +16,6 @@ public class SpawnPoint extends GridPoint {
     private final Street street;
     private static final int EXPECTED_VALUE = 45;
     private static final int DEVIATION = 10;
-    private static final double CONVERSION_FACTOR_KM_PER_H_T_M_PER_S = 3.6;
     private int currentTick = 0;
 
 
@@ -31,14 +30,13 @@ public class SpawnPoint extends GridPoint {
         boolean shouldSpawnCarInThisTick = currentTick % spawnTick == 0;
         // right now is spawns cars at t = 0
 
+        double carVelocityInKmPerH = random.nextGaussian(EXPECTED_VALUE, DEVIATION);
+
         if (!shouldSpawnCarInThisTick) {
             return null;
         }
 
-        double carVelocityInKmPerH = random.nextGaussian(EXPECTED_VALUE, DEVIATION);
-        double carVelocityInMPerS = carVelocityInKmPerH / CONVERSION_FACTOR_KM_PER_H_T_M_PER_S;
-
-        return new Car(street, carVelocityInMPerS, getPoint()) ;
+        return new Car(carVelocityInKmPerH, street, getPoint()) ;
     }
 
 }

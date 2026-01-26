@@ -35,4 +35,11 @@ public class Point {
     public double getLength() {
         return Math.sqrt(x * x + y * y);
     }
+
+    public Point multiply(double scalar) {
+        return new Point(
+                x * scalar,
+                y * scalar
+        );
+    }
 }

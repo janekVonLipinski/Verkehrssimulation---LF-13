@@ -28,7 +28,7 @@ public class SpawnPoint extends GridPoint {
     public Car spawnCar() {
         currentTick++;
         boolean shouldSpawnCarInThisTick = currentTick % spawnTick == 0;
-        // right now is spawns cars at t = 0
+        // right now it spawns cars at t = 0
 
         double carVelocityInKmPerH = random.nextGaussian(EXPECTED_VALUE, DEVIATION);
 

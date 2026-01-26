@@ -13,7 +13,6 @@ public class Car {
     private Point location;
     private static final double CONVERSION_FACTOR_KM_PER_H_T_M_PER_S = 3.6;
 
-
     public Car(double carVelocityInKmPerH, Street currentStreet, Point location) {
         this.velocity = carVelocityInKmPerH / CONVERSION_FACTOR_KM_PER_H_T_M_PER_S;;
         this.currentStreet = currentStreet;
@@ -27,9 +26,8 @@ public class Car {
         
         while (canDrive) {
             Point direction = currentStreet.getDirection();
-            double streetLength = currentStreet.getLength();
 
-            Point directionWithVelocity = direction.multiply(velocity); // unitHandling is handled during Car creation
+            Point directionWithVelocity = direction.multiply(distanceToDrive); // unitHandling is handled during Car creation
             Point nextPoint = location.add(directionWithVelocity);
 
             Point streetEndpoint1 = currentStreet.getFirstPoint().getPoint();

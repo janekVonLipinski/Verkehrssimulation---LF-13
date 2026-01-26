@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import traffic_simulation.model.cars.Car;
 import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -11,13 +12,16 @@ public class Simulation {
 
 
     private final List<SpawnPoint> spawnPoints;
-    private final List<Car> cars;
+    private List<Car> cars;
 
-    public void simulate() {
+    public void simulate(int numberOfGivenTicks) {
 
-        while (true) {
+        int ticksDone = 0;
+
+        while (ticksDone < numberOfGivenTicks) {
             spawnCars();
             simulateCars();
+            ticksDone++;
         }
 
     }
@@ -34,5 +38,16 @@ public class Simulation {
 
     private void simulateCars() {
 
+        List<Car> survivingCars = new ArrayList<>();
+
+        for (Car car : cars) {
+            car = car.drive();
+
+            if (car != null) {
+                survivingCars.add(car);
+            }
+        }
+
+        cars = survivingCars;
     }
 }

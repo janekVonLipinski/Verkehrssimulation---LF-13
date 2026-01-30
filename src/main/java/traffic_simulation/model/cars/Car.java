@@ -1,5 +1,6 @@
 package traffic_simulation.model.cars;
 
+import lombok.Getter;
 import traffic_simulation.model.Point;
 import traffic_simulation.model.street_network.GridPoint;
 import traffic_simulation.model.street_network.Street;
@@ -10,6 +11,7 @@ public class Car {
     
     private final double velocity;
     private Street currentStreet;
+    @Getter
     private Point location;
     private static final double CONVERSION_FACTOR_KM_PER_H_T_M_PER_S = 3.6;
 
@@ -88,6 +90,8 @@ public class Car {
         boolean hasUnderShotInXDirection = nextPoint.getX() < destinationPoint.getX();
         boolean hasUnderShotInYDirection = nextPoint.getY() < destinationPoint.getY();
 
+
+        //TODO this is wrong, if we move parallel to axis
         if (isXOrientationGreaterZero && isYOrientationGreaterZero) {
             return hasOverShotInXDirection && hasOverShotInYDirection;
         }

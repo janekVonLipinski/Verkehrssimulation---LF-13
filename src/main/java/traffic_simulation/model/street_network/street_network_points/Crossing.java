@@ -5,6 +5,7 @@ import traffic_simulation.model.Point;
 import traffic_simulation.model.street_network.GridPoint;
 import traffic_simulation.model.street_network.Street;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -14,9 +15,13 @@ public class Crossing extends GridPoint {
     private final Map<Street, Double> streets;
     private final Random random = new Random();
 
-    public Crossing(double x, double y, Map<Street, Double> streets) {
+    public Crossing(double x, double y) {
         super(new Point(x, y));
-        this.streets = streets;
+        this.streets = new HashMap<>();
+    }
+
+    public void addStreetToMap(Street street, double probability) {
+        streets.put(street, probability);
     }
 
     public Street getNextStreet(Street currentStreet) {

@@ -12,8 +12,8 @@ public class Crossing extends GridPoint {
 
     private final Map<Street, Double> streets;
 
-    public Crossing(double x, double y, Map<Street, Double> streets) {
-        super(new Point(x, y));
+    public Crossing(String name, double x, double y, Map<Street, Double> streets) {
+        super(new Point(x, y),name);
         this.streets = streets;
     }
 }

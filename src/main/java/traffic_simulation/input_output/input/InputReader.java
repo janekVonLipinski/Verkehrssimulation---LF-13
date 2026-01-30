@@ -1,10 +1,12 @@
 package traffic_simulation.input_output.input;
 
+import lombok.Getter;
+import traffic_simulation.model.Point;
 import traffic_simulation.model.street_network.Street;
 import traffic_simulation.model.street_network.street_network_points.*;
 import java.io.*;
 import java.util.*;
-
+@Getter
 public class InputReader {
     private int endtimeOfSimulation;
     private int tickspeed;
@@ -12,7 +14,10 @@ public class InputReader {
     private List<SpawnPoint> spawnPoints = new ArrayList<>();
     private List<Crossing> crossings = new ArrayList<>();
 
-    public void readFile(String path) throws IOException {
+    private record bla(List<SpawnPoint> spawnPoints, List<Crossing> crossings) {
+    }
+
+    public bla readFile(String path) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(path));
         String line;
 
@@ -24,7 +29,7 @@ public class InputReader {
             line = line.trim();
 
             // leere Zeilen überspringen
-            if (line.isEmpty()){
+            if (line.isEmpty()) {
                 continue;
             }
 
@@ -59,45 +64,72 @@ public class InputReader {
             // Einfallspunkte
             if (isspawnPoint) {
                 String[] p = line.split(" ");
-
                 String name = p[0];
                 int x = Integer.parseInt(p[1]);
                 int y = Integer.parseInt(p[2]);
                 String target = p[3];
                 int spawnTick = Integer.parseInt(p[4]);
 
-                spawnPoints.add(new SpawnPoint(x, y, spawnTick));
+                spawnPoints.add(new SpawnPoint(name, x, y, spawnTick));
             }
 
             // Kreuzungen
             if (iscrossing) {
                 String[] p = line.split(" ");
 
+                String name = p[0];
                 double x = Double.parseDouble(p[1]);
                 double y = Double.parseDouble(p[2]);
-
                 Map<Street, Double> streets = new HashMap<>();
-                Crossing c = new Crossing(x, y, streets);
+                Crossing c = new Crossing(name, x, y, streets);
 
-                // Paare: Straßen und die Wahrscheinlichkeit in diese abzubiegen
-                for (int i = 3; i < p.length; i += 2) {
-                    String targetName = p[i];
-                    double probability = Double.parseDouble(p[i + 1]);
-                }
 
                 crossings.add(c);
             }
         }
-        br.close();
-        for(SpawnPoint x: spawnPoints){
-            x.getSpawnTick();
+        while ((line = br.readLine()) != null) {
+            line = line.trim();
+
+            // leere Zeilen überspringen
+            if (line.isEmpty()) {
+                continue;
+            }
+
+            // Zeilen mit Kommentaren überspringen
+            if (line.startsWith("#")) {
+                continue;
+            }
+            if (line.equalsIgnoreCase("Kreuzungen:")) {
+                iscrossing = true;
+                continue;
+            }
+            // Kreuzungen
+            if (iscrossing) {
+                String[] p = line.split(" ");
+
+                String name = p[0];
+                double x = Double.parseDouble(p[1]);
+                double y = Double.parseDouble(p[2]);
+                Map<Street, Double> streets = new HashMap<>();
+
+                // Paare: Straßen und die Wahrscheinlichkeit in diese abzubiegen
+                for (int i = 3; i < p.length; i += 2) {
+                    String targetName = p[i];
+                    for(SpawnPoint point: spawnPoints){
+                        for (SpawnPoint point2: spawnPoints){
+                        if(point.getName().equals(name)) {
+                            if (point.getName().equals(targetName)) {
+                                Street street = new Street(point, point2);
+                            }
+                        }
+                    }
+                    double probability = Double.parseDouble(p[i + 1]);
+                }
+            }
+            br.close();
+            return new bla(spawnPoints, crossings);
         }
     }
-
-    public int getEndtimeOfSimulation() { return endtimeOfSimulation; }
-    public int getTickspeed() { return tickspeed; }
-    public List<SpawnPoint> getSpawnPoints() { return spawnPoints; }
-    public List<Crossing> getCrossings() { return crossings; }
 }
 
- 
+

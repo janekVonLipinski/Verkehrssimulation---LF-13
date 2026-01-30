@@ -10,8 +10,8 @@ public class SpawnPoint extends GridPoint {
     @Getter
     private final double spawnTick;
 
-    public SpawnPoint(double x, double y, double spawnTick) {
-        super(new Point(x, y));
+    public SpawnPoint(String name, double x, double y, double spawnTick) {
+        super(new Point(x, y),name);
         this.spawnTick = spawnTick;
     }
 }

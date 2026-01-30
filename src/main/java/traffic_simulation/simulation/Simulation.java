@@ -10,7 +10,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Simulation {
 
-
     private final List<SpawnPoint> spawnPoints;
     private List<Car> cars = new ArrayList<>();
 

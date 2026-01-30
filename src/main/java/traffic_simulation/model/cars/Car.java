@@ -10,24 +10,29 @@ import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 public class Car {
     
     private final double velocity;
+    private final Point destination;
+    @Getter
     private Street currentStreet;
     @Getter
     private Point location;
     private static final double CONVERSION_FACTOR_KM_PER_H_T_M_PER_S = 3.6;
 
-    public Car(double carVelocityInKmPerH, Street currentStreet, Point location) {
+    public Car(double carVelocityInKmPerH, Street currentStreet, Point location, Point destination) {
         this.velocity = carVelocityInKmPerH / CONVERSION_FACTOR_KM_PER_H_T_M_PER_S;;
         this.currentStreet = currentStreet;
         this.location = location;
+        this.destination = destination;
     }
 
     public Car drive() {
-        System.out.println(location);
         double distanceToDrive = velocity;
         //1 Tick = 1s => a car can drive a distance corresponding to its velocity
         boolean canDrive = true;
         
         while (canDrive) {
+
+            System.out.println(location);
+            //TODO in which Point am I. Must be possible to move in opposite direction
             Point direction = currentStreet.getDirection();
 
             Point directionWithVelocity = direction.multiply(distanceToDrive); // unitHandling is handled during Car creation
@@ -46,7 +51,6 @@ public class Car {
                 return this;
             }
 
-
             GridPoint nextGridPoint = currentStreet.getFirstPoint();
 
             if (hasReachedStreetEndpoint2) {
@@ -61,9 +65,9 @@ public class Car {
             
             Crossing crossing = (Crossing) nextGridPoint;
             currentStreet = crossing.getNextStreet(currentStreet);
-            location = nextGridPointLocation;
 
             distanceToDrive = calculateRemainingDistance(nextGridPointLocation, distanceToDrive);
+            location = nextGridPointLocation;
             canDrive = distanceToDrive > 0;
         }
         
@@ -93,17 +97,17 @@ public class Car {
 
         //TODO this is wrong, if we move parallel to axis
         if (isXOrientationGreaterZero && isYOrientationGreaterZero) {
-            return hasOverShotInXDirection && hasOverShotInYDirection;
+            return hasOverShotInXDirection || hasOverShotInYDirection;
         }
 
         if (isXOrientationGreaterZero) {
-            return hasOverShotInXDirection && hasOverShotInYDirection;
+            return hasOverShotInXDirection || hasOverShotInYDirection;
         }
 
         if (isYOrientationGreaterZero) {
-            return hasUnderShotInXDirection && hasOverShotInYDirection;
+            return hasUnderShotInXDirection || hasOverShotInYDirection;
         }
 
-        return hasUnderShotInYDirection && hasUnderShotInXDirection;
+        return hasUnderShotInYDirection || hasUnderShotInXDirection;
     }
 }

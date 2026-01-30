@@ -39,6 +39,8 @@ public class SpawnPoint extends GridPoint {
             return null;
         }
 
+        Point destination =
+
         return new Car(carVelocityInKmPerH, street, getPoint()) ;
     }
 

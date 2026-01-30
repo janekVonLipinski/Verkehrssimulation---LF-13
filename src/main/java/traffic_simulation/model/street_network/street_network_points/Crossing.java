@@ -32,7 +32,7 @@ public class Crossing extends GridPoint {
 
 
         //TODO implement correct choosing logic, not just a random street
-        int randomStreetIndex = random.nextInt(0, possibleStreets.size() - 1);
+        int randomStreetIndex = possibleStreets.size() == 1 ? 0 : random.nextInt(0, possibleStreets.size() - 1);
         return possibleStreets.get(randomStreetIndex);
     }
 }

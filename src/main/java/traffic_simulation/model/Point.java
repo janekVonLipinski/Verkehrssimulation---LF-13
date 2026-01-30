@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+import java.util.Objects;
+
 @RequiredArgsConstructor
 @Getter
 @ToString
@@ -43,5 +45,13 @@ public class Point {
                 x * scalar,
                 y * scalar
         );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return Double.compare(x, point.x) == 0 && Double.compare(y, point.y) == 0;
     }
 }

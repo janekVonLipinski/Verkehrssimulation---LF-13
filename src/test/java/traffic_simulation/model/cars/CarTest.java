@@ -43,20 +43,29 @@ class CarTest {
         Point point_crossing = new Point(0, 1);
         Point point_end = new Point(0, 2);
 
-        Point direction = point_crossing.subtract(point_start);
+        Point direction_one = point_crossing.subtract(point_start);
+        Point direction_two = point_end.subtract(point_crossing);
 
         SpawnPoint spawnPoint = new SpawnPoint(point_start, 0, null);
-        SpawnPoint spawnPoint1 = new SpawnPoint(point_crossing, 0, null);
+        SpawnPoint spawnPoint1 = new SpawnPoint(point_end, 0, null);
 
-        Street street = new Street(spawnPoint, spawnPoint1, 1, direction);
-        spawnPoint.setStreet(street);
-        spawnPoint1.setStreet(street);
+        Crossing crossing = new Crossing(point_crossing.getX(), point_crossing.getY());
 
-        Car sut = new Car(3.6, street, point_start);
+        Street first_street = new Street(spawnPoint, crossing, 1, direction_one);
+        Street second_street = new Street(crossing, spawnPoint1, 1, direction_two);
+
+        spawnPoint.setStreet(first_street);
+        spawnPoint1.setStreet(second_street);
+
+        crossing.addStreetToMap(first_street, 1);
+        crossing.addStreetToMap(second_street, 1);
+
+        Car sut = new Car(1.5 * 3.6, first_street, point_start);
 
         Car resultingCar = sut.drive();
 
-        assertEquals(1, resultingCar.getLocation().getY());
+        assertEquals(1.5, resultingCar.getLocation().getY());
+        assertEquals(second_street, sut.getCurrentStreet());
     }
 
 }

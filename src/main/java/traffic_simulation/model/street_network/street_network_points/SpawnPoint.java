@@ -38,10 +38,7 @@ public class SpawnPoint extends GridPoint {
         if (!shouldSpawnCarInThisTick) {
             return null;
         }
-
-        Point destination =
-
-        return new Car(carVelocityInKmPerH, street, getPoint()) ;
+        return new Car(carVelocityInKmPerH, street, getPoint(), null) ;
     }
 
 }

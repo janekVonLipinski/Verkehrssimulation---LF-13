@@ -30,4 +30,17 @@ public class Street {
 
         return carsPerOnehundredMeter;
     }
+
+    //Dumme blöde funktion, aber ich habe die Sorge, dass folgendes Problem auftritt:
+    //Ich möchte den Nachbar eines Punktes haben, frage die Straße auf die der Punkt liegt ->
+    //Nun weiß ich nicht, ob Punkt auf Straße street.firstPoint oder street.secondPoint ist
+    //Es könnte also passieren wenn ich (der logik nach) davon ausgehe, das Punkt mein street.firstPoint ist
+    //und ich street.secondPoint als Nachbar deklariere, in Wahrheit gar nicht der Nachbar zurückgegeben wird
+    public GridPoint getOtherPoint(GridPoint point) {
+        if (point == this.firstPoint) {
+            return this.secondPoint;
+        } else {
+            return this.secondPoint;
+        }
+    }
 }

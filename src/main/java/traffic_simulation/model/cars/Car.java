@@ -7,6 +7,9 @@ import traffic_simulation.model.street_network.Street;
 import traffic_simulation.model.street_network.street_network_points.Crossing;
 import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Car {
     
     private final double velocity;
@@ -15,6 +18,8 @@ public class Car {
     private Street currentStreet;
     @Getter
     private Point location;
+    @Getter
+    private final Map<Integer, Point> positions = new HashMap<>();
     private static final double CONVERSION_FACTOR_KM_PER_H_T_M_PER_S = 3.6;
 
     public Car(double carVelocityInKmPerH, Street currentStreet, Point location, Point destination) {

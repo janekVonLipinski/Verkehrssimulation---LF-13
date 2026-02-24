@@ -17,22 +17,22 @@ class CarTest {
     void given_car_drives_parallel_to_y_Axis_then_position_updatesCorrectly() {
 
         Point point = new Point(0, 0);
-        Point point1 = new Point(0, 1);
+        Point point1 = new Point(0, 2);
 
         Point direction = point1.subtract(point);
 
         SpawnPoint spawnPoint = new SpawnPoint(point, 0, null);
         SpawnPoint spawnPoint1 = new SpawnPoint(point1, 0, null);
 
-        Street street = new Street(spawnPoint, spawnPoint1, 1, direction);
+        Street street = new Street(spawnPoint, spawnPoint1, 2, direction);
         spawnPoint.setStreet(street);
         spawnPoint1.setStreet(street);
 
-        Car sut = new Car(3.6, street, point, null);
+        Car sut = new Car(3.6 * 100, street, point, spawnPoint1);
 
-        //Car resultingCar = sut.drive();
+        Car resultingCar = sut.drive();
 
-        //assertEquals(1, resultingCar.getLocation().getY());
+        assertEquals(1, resultingCar.getLocation().getY());
     }
 
 
@@ -62,10 +62,9 @@ class CarTest {
 
         Car sut = new Car(1.5 * 3.6, first_street, point_start, null);
 
-        //Car resultingCar = sut.drive();
-
-        //assertEquals(1.5, resultingCar.getLocation().getY());
-        //assertEquals(second_street, sut.getCurrentStreet());
+        Car resultingCar = sut.drive();
+        assertEquals(1.5, resultingCar.getLocation().getY());
+        assertEquals(second_street, sut.getCurrentStreet());
     }
 
 }

@@ -35,10 +35,12 @@ public class SpawnPoint extends GridPoint {
 
         double carVelocityInKmPerH = random.nextGaussian(EXPECTED_VALUE, DEVIATION);
 
+        GridPoint destination = street.getOtherPoint(this);
+
         if (!shouldSpawnCarInThisTick) {
             return null;
         }
-        return new Car(carVelocityInKmPerH, street, getPoint(), null) ;
+        return new Car(carVelocityInKmPerH, street, getPoint(), destination) ;
     }
 
 }

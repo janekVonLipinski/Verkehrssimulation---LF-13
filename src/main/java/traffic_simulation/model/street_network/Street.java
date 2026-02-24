@@ -1,10 +1,14 @@
 package traffic_simulation.model.street_network;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import traffic_simulation.model.Point;
 
 @RequiredArgsConstructor
-public class   Street {
+@Getter
+public class Street {
 
     private final GridPoint firstPoint;
     private final GridPoint secondPoint;
+    private final double length;
 }

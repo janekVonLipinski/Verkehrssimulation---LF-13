@@ -1,17 +1,50 @@
 package traffic_simulation.model.street_network.street_network_points;
 
+
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import traffic_simulation.model.Point;
+import traffic_simulation.model.cars.Car;
 import traffic_simulation.model.street_network.GridPoint;
+import traffic_simulation.model.street_network.Street;
+
+import java.util.Random;
 
 
 public class SpawnPoint extends GridPoint {
     @Getter
+    private final String name;
     private final double spawnTick;
+    private final Random random = new Random();
+    @Getter
+    @Setter
+    private Street street;
 
-    public SpawnPoint(String name, double x, double y, double spawnTick) {
-        super(new Point(x, y),name);
+
+    //TODO rethink this, both street and Point now each other which is inconvenient
+    private static final int EXPECTED_VALUE = 45;
+    private static final int DEVIATION = 10;
+    private int currentTick = 0;
+
+
+    public SpawnPoint(Point point, double spawnTick, Street street, String name) {
+        super(point,null);
         this.spawnTick = spawnTick;
+        this.street = street;
+        this.name = name;
     }
+
+    public Car spawnCar() {
+        currentTick++;
+        boolean shouldSpawnCarInThisTick = currentTick % spawnTick == 0;
+        // right now it spawns cars at t = 0
+
+        double carVelocityInKmPerH = random.nextGaussian(EXPECTED_VALUE, DEVIATION);
+
+        if (!shouldSpawnCarInThisTick) {
+            return null;
+        }
+        return new Car(carVelocityInKmPerH, street, getPoint(), null) ;
+    }
+
 }

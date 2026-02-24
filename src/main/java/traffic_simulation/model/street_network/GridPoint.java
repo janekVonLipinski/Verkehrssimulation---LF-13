@@ -8,6 +8,7 @@ import traffic_simulation.model.Point;
 @Getter
 public abstract class GridPoint {
 
+    @Getter
     private final Point point;
 
     private final String name;

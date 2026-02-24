@@ -1,6 +1,7 @@
 package traffic_simulation.input_output.input;
 
 import lombok.Getter;
+import traffic_simulation.model.Point;
 import traffic_simulation.model.street_network.GridPoint;
 import traffic_simulation.model.street_network.Street;
 import traffic_simulation.model.street_network.street_network_points.*;
@@ -9,7 +10,7 @@ import java.util.*;
 @Getter
 public class InputReader {
 
-    public record ParsingResult(int endtimeOfSimulation, int tickspeed, List<SpawnPoint> spwanPoints) {}
+    public record ParsingResult(int endtimeOfSimulation, int tickspeed, List<SpawnPoint> spwanPoints,  List<Street> streets) {}
 
     public ParsingResult readFile(String path) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(path));
@@ -24,6 +25,7 @@ public class InputReader {
         boolean isCrossing = false;
 
         List<GridPoint> gridPoints = new ArrayList<>();
+        List<Street> streets = new ArrayList<>();
 
         while ((line = br.readLine()) != null) {
             line = line.trim();
@@ -69,10 +71,8 @@ public class InputReader {
                 int y = Integer.parseInt(p[2]);
                 String target = p[3];
                 int spawnTick = Integer.parseInt(p[4]);
-
-                gridPoints.add(new SpawnPoint(name, x, y, spawnTick));
+                gridPoints.add(new SpawnPoint(new Point(x, y), spawnTick,null, name));
             }
-
             // Kreuzungen
             if (isCrossing) {
                 String[] p = line.split(" ");
@@ -81,10 +81,14 @@ public class InputReader {
                 double x = Double.parseDouble(p[1]);
                 double y = Double.parseDouble(p[2]);
 
-                gridPoints.add(new Crossing(name,x,y));
+                gridPoints.add(new Crossing(name, x, y));
             }
         }
-        while ((line = br.readLine()) != null) {
+        br.close();
+        isCrossing = false;
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
+
+        while ((line = bufferedReader.readLine()) != null) {
             line = line.trim();
 
             // leere Zeilen überspringen
@@ -106,7 +110,7 @@ public class InputReader {
                 String name = parsed_line[0];
 
                 var crossing = gridPoints.stream()
-                        .filter(a -> a.getName().equals(name))
+                        .filter(a -> name.equals(a.getName()))
                         .findFirst()
                         .orElse(null);
 
@@ -120,28 +124,47 @@ public class InputReader {
                     double probability = Double.parseDouble(parsed_line[i + 1]);
 
                     var target = gridPoints.stream()
-                            .filter(a -> a.getName().equals(targetName))
+                            .filter(a -> targetName.equals(a.getName()))
                             .findFirst()
                             .orElse(null);
 
                     if (target == null) {
                         continue;
                     }
-
-                    Street street = new Street(crossing, target);
+                    Street street = new Street(crossing, target,crossing.getPoint().getDistantsToPoint(target.getPoint()));
+                    streets.add(street);
                     Crossing casted_crossing = (Crossing) crossing;
                     casted_crossing.addStreetToMap(street, probability);
                 }
-                br.close();
             }
         }
+        bufferedReader.close();
 
         var spawnPoints = gridPoints.stream()
                 .filter(i -> i instanceof SpawnPoint)
                 .map(i -> (SpawnPoint) i)
                 .toList();
 
-        return new ParsingResult(endtimeOfSimulation, tickspeed, spawnPoints);
+        for (SpawnPoint sp : spawnPoints) {
+            Street matchingStreet = streets.stream()
+                    .filter(s -> s.getFirstPoint() == sp || s.getSecondPoint() == sp)
+                    .findFirst()
+                    .orElse(null); if (matchingStreet != null) { sp.setStreet(matchingStreet); }
+
+            if (matchingStreet != null) {
+                sp.setStreet(matchingStreet);
+            } else {
+                matchingStreet = streets.stream()
+                        .filter(s -> s.getSecondPoint().getPoint().equals(sp.getPoint()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (matchingStreet != null) {
+                    sp.setStreet(matchingStreet);
+                }
+            }
+        }
+        return new ParsingResult(endtimeOfSimulation, tickspeed, spawnPoints,streets);
     }
 }
 

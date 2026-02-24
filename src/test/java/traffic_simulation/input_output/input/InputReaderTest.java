@@ -6,6 +6,8 @@ import traffic_simulation.model.street_network.street_network_points.Crossing;
 import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,16 +43,54 @@ class InputReaderTest {
                 reader.readFile("src/main/resources/invalid/Eingabe.txt")
         );
     }
-/*
-    @Test void givenMyCock() {
 
-        SpawnPoint sp = new SpawnPoint();
+    @Test
+    void given_eingabe_1_then_references_are_correct() throws IOException {
 
-        //sp.getNeighbour()
-        //
+        InputReader.ParsingResult result =
+                reader.readFile("src/main/resources/IHK_01/Eingabe.txt");
 
+        var spawnPoints = result.spwanPoints();
+        var streets = result.streets();
+
+        // --- SpawnPoints haben Straßen ---
+        for (SpawnPoint sp : spawnPoints) {
+            assertNotNull(sp.getStreet(), "SpawnPoint hat keine Straße: " + sp.getName());
+        }
+
+        // --- Alle Streets haben gültige Endpunkte ---
+        for (Street street : streets) {
+            assertNotNull(street.getFirstPoint(), "Street ohne Startpunkt");
+            assertNotNull(street.getSecondPoint(), "Street ohne Zielpunkt");
+        }
+
+        // --- Crossings über Traversierung finden ---
+        Set<Crossing> crossings = new HashSet<>();
+
+        for (SpawnPoint sp : spawnPoints) {
+            Street street = sp.getStreet();
+
+            if (street.getFirstPoint() instanceof Crossing c) {
+                crossings.add(c);
+            }
+            if (street.getSecondPoint() instanceof Crossing c) {
+                crossings.add(c);
+            }
+        }
+
+        // --- Es sollten Crossings existieren ---
+        assertFalse(crossings.isEmpty(), "Keine Crossings gefunden");
+
+        // --- Jede Street sollte mit mindestens einem Crossing verbunden sein ---
+        for (Street street : streets) {
+            boolean hasCrossing =
+                    street.getFirstPoint() instanceof Crossing ||
+                    street.getSecondPoint() instanceof Crossing;
+
+            assertTrue(hasCrossing, "Street ohne Crossing-Anbindung gefunden");
+        }
     }
-*/
+
 
 
     /*TODO tests für

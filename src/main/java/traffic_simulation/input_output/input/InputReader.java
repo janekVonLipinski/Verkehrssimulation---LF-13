@@ -9,7 +9,6 @@ import java.util.*;
 @Getter
 public class InputReader {
 
-
     public record ParsingResult(int endtimeOfSimulation, int tickspeed, List<SpawnPoint> spwanPoints) {}
 
     public ParsingResult readFile(String path) throws IOException {

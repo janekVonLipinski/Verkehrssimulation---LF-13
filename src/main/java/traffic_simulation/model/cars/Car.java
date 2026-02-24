@@ -31,14 +31,16 @@ public class Car {
         
         while (canDrive) {
 
-            System.out.println(location);
             //TODO in which Point am I. Must be possible to move in opposite direction
-            Point direction = this.destination.getPoint().normalize();
+            GridPoint otherPoint = currentStreet.getOtherPoint(destination);
+            Point destinationPoint = this.destination.getPoint();
+            Point direction = destinationPoint.subtract(otherPoint.getPoint());
+            Point normalizedDirection = direction.normalize();
 
-            Point directionWithVelocity = direction.multiply(distanceToDrive); // unitHandling is handled during Car creation
+            Point directionWithVelocity = normalizedDirection.multiply(distanceToDrive); // unitHandling is handled during Car creation
             Point nextPoint = location.add(directionWithVelocity);
 
-            boolean hasReachedStreet = hasReachedEndOfStreet(nextPoint, direction);
+            boolean hasReachedStreet = hasReachedEndOfStreet(nextPoint, destination.getPoint());
 
             if (!hasReachedStreet) {
                 location = nextPoint;
@@ -74,8 +76,8 @@ public class Car {
 
     private boolean hasReachedEndOfStreet(Point nextPoint, Point destinationPoint) {
         //TODO is it possible to make this method less ugly
-        double xOrientation = currentStreet.getDirection().getX();
-        double yOrientation = currentStreet.getDirection().getY();
+        double xOrientation = destinationPoint.getX();
+        double yOrientation = destinationPoint.getY();
 
         boolean isXOrientationGreaterZero = xOrientation > 0;
         boolean isYOrientationGreaterZero = yOrientation > 0;

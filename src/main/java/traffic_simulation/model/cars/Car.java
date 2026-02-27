@@ -10,15 +10,15 @@ import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 public class Car {
     
     private final double velocity;
-    private final Point destination;
+    private GridPoint destination;
     @Getter
     private Street currentStreet;
     @Getter
     private Point location;
     private static final double CONVERSION_FACTOR_KM_PER_H_T_M_PER_S = 3.6;
 
-    public Car(double carVelocityInKmPerH, Street currentStreet, Point location, Point destination) {
-        this.velocity = carVelocityInKmPerH / CONVERSION_FACTOR_KM_PER_H_T_M_PER_S;;
+    public Car(double carVelocityInKmPerH, Street currentStreet, Point location, GridPoint destination) {
+        this.velocity = carVelocityInKmPerH / (CONVERSION_FACTOR_KM_PER_H_T_M_PER_S * 100);
         this.currentStreet = currentStreet;
         this.location = location;
         this.destination = destination;
@@ -31,31 +31,23 @@ public class Car {
         
         while (canDrive) {
 
-            System.out.println(location);
             //TODO in which Point am I. Must be possible to move in opposite direction
-            Point direction = new Point(0,0);
+            GridPoint otherPoint = currentStreet.getOtherPoint(destination);
+            Point destinationPoint = this.destination.getPoint();
+            Point direction = destinationPoint.subtract(otherPoint.getPoint());
+            Point normalizedDirection = direction.normalize();
 
-            Point directionWithVelocity = direction.multiply(distanceToDrive); // unitHandling is handled during Car creation
+            Point directionWithVelocity = normalizedDirection.multiply(distanceToDrive); // unitHandling is handled during Car creation
             Point nextPoint = location.add(directionWithVelocity);
 
-            Point streetEndpoint1 = currentStreet.getFirstPoint().getPoint();
-            Point streetEndpoint2 = currentStreet.getSecondPoint().getPoint();
+            boolean hasReachedStreet = hasReachedEndOfStreet(nextPoint, destination.getPoint());
 
-            boolean hasReachedStreetEndpoint1 = hasReachedEndOfStreet(nextPoint, streetEndpoint1);
-            boolean hasReachedStreetEndpoint2 = hasReachedEndOfStreet(nextPoint, streetEndpoint2);
-
-            boolean hasReachedEndOfStreet =  hasReachedStreetEndpoint1 || hasReachedStreetEndpoint2;
-
-            if (!hasReachedEndOfStreet) {
+            if (!hasReachedStreet) {
                 location = nextPoint;
                 return this;
             }
 
-            GridPoint nextGridPoint = currentStreet.getFirstPoint();
-
-            if (hasReachedStreetEndpoint2) {
-                nextGridPoint = currentStreet.getSecondPoint();
-            }
+            GridPoint nextGridPoint = destination;
 
             Point nextGridPointLocation = nextGridPoint.getPoint();
             
@@ -65,9 +57,11 @@ public class Car {
             
             Crossing crossing = (Crossing) nextGridPoint;
             currentStreet = crossing.getNextStreet(currentStreet);
+            GridPoint destination = currentStreet.getOtherPoint(crossing);
 
             distanceToDrive = calculateRemainingDistance(nextGridPointLocation, distanceToDrive);
             location = nextGridPointLocation;
+            this.destination = destination;
             canDrive = distanceToDrive > 0;
         }
         
@@ -82,8 +76,8 @@ public class Car {
 
     private boolean hasReachedEndOfStreet(Point nextPoint, Point destinationPoint) {
         //TODO is it possible to make this method less ugly
-        double xOrientation = 0;
-        double yOrientation = 0;
+        double xOrientation = destinationPoint.getX();
+        double yOrientation = destinationPoint.getY();
 
         boolean isXOrientationGreaterZero = xOrientation > 0;
         boolean isYOrientationGreaterZero = yOrientation > 0;

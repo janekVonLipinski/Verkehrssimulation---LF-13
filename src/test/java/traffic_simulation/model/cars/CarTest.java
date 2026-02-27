@@ -38,8 +38,8 @@ class CarTest {
         Point point_crossing = new Point(0, 1);
         Point point_end = new Point(0, 2);
 
-        SpawnPoint spawnPoint = new SpawnPoint(point_start, 0, null);
-        SpawnPoint spawnPoint1 = new SpawnPoint(point_end, 0, null);
+        SpawnPoint spawnPoint = new SpawnPoint(point_start, 0, null, "");
+        SpawnPoint spawnPoint1 = new SpawnPoint(point_end, 0, null,"");
 
         Crossing crossing = new Crossing(null,point_crossing.getX(), point_crossing.getY());
 

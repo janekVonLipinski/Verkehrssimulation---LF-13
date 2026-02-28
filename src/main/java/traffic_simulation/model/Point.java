@@ -35,7 +35,7 @@ public class Point {
         return new Point(-x, -y);
     }
 
-    public double getDistantsToPoint(Point p){
+    public double getDistanceToPoint(Point p){
         return Math.sqrt((y - p.getY()) * (y - p.getY()) + (x - p.getX()) * (x - p.getX()));
     }
     public double getLength() {

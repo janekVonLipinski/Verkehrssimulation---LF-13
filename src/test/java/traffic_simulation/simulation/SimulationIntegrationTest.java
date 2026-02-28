@@ -20,8 +20,8 @@ class SimulationIntegrationTest {
         Point p2 = new Point(1, 0);
 
 
-        SpawnPoint sp1 = new SpawnPoint(p1, 3, null);
-        SpawnPoint sp2 = new SpawnPoint(p2, 3, null);
+        SpawnPoint sp1 = new SpawnPoint(p1, 3, null,null);
+        SpawnPoint sp2 = new SpawnPoint(p2, 3, null,null);
 
         Street street = new Street(sp1, sp2, 1);
         sp1.setStreet(street);

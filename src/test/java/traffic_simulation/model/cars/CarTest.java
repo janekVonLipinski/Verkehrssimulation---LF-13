@@ -16,8 +16,8 @@ class CarTest {
         Point point = new Point(0, 0);
         Point point1 = new Point(0, 2);
 
-        SpawnPoint spawnPoint = new SpawnPoint(point, 0, null);
-        SpawnPoint spawnPoint1 = new SpawnPoint(point1, 0, null);
+        SpawnPoint spawnPoint = new SpawnPoint(point, 0, null,null);
+        SpawnPoint spawnPoint1 = new SpawnPoint(point1, 0, null,null);
 
         Street street = new Street(spawnPoint, spawnPoint1, 2);
         spawnPoint.setStreet(street);
@@ -38,10 +38,10 @@ class CarTest {
         Point point_crossing = new Point(0, 1);
         Point point_end = new Point(0, 2);
 
-        SpawnPoint spawnPoint = new SpawnPoint(point_start, 0, null);
-        SpawnPoint spawnPoint1 = new SpawnPoint(point_end, 0, null);
+        SpawnPoint spawnPoint = new SpawnPoint(point_start, 0, null, "");
+        SpawnPoint spawnPoint1 = new SpawnPoint(point_end, 0, null,"");
 
-        Crossing crossing = new Crossing(point_crossing.getX(), point_crossing.getY());
+        Crossing crossing = new Crossing(null,point_crossing.getX(), point_crossing.getY());
 
         Street first_street = new Street(spawnPoint, crossing, 1);
         Street second_street = new Street(crossing, spawnPoint1, 1);

@@ -14,6 +14,7 @@ public class Point {
     private final double x;
 
     private final double y;
+    
 
     public Point add(Point p) {
         return new Point(x + p.x, y + p.y);
@@ -27,15 +28,16 @@ public class Point {
     public Point normalize() {
         double length = Math.sqrt(x * x + y * y);
 
-        return new Point(
-                x / length, y / length
-        );
+        return new Point(x / length, y / length);
     }
 
     public Point getInverted() {
         return new Point(-x, -y);
     }
 
+    public double getDistanceToPoint(Point p){
+        return Math.sqrt((y - p.getY()) * (y - p.getY()) + (x - p.getX()) * (x - p.getX()));
+    }
     public double getLength() {
         return Math.sqrt(x * x + y * y);
     }

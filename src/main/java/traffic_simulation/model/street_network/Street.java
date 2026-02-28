@@ -11,7 +11,15 @@ public class Street {
     private final GridPoint firstPoint;
     private final GridPoint secondPoint;
     private final double length;
-    private final Point direction; // should be normalized
+
+    public GridPoint getOtherPoint(GridPoint point) {
+
+        if (point == this.firstPoint) {
+            return this.secondPoint;
+        }
+
+        return this.firstPoint;
+    }
 
     private int carCounter = 0;
 

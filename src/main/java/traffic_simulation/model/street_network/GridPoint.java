@@ -4,13 +4,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import traffic_simulation.model.Point;
 
-import java.util.ArrayList;
-
 @RequiredArgsConstructor
+@Getter
 public abstract class GridPoint {
 
     @Getter
     private final Point point;
 
-    public abstract ArrayList<GridPoint> getNeighbours();
+    private final String name;
 }

@@ -2,6 +2,7 @@ package traffic_simulation.model.street_network.street_network_points;
 
 
 import lombok.Setter;
+import lombok.Getter;
 import traffic_simulation.model.Point;
 import traffic_simulation.model.cars.Car;
 import traffic_simulation.model.street_network.GridPoint;

@@ -1,65 +1,92 @@
 package traffic_simulation.input_output.output_writer;
 
-import traffic_simulation.model.street_network.GridPoint;
+import traffic_simulation.model.Point;
+import traffic_simulation.model.cars.Car;
 import traffic_simulation.model.street_network.Street;
-import traffic_simulation.model.street_network.street_network_points.Crossing;
-import traffic_simulation.simulation.Simulation;
-import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 
-import java.sql.Array;
+import java.nio.Buffer;
 import java.util.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.function.BiFunction;
 
 
 public class OutPutWriter {
 
-    private BufferedWriter writer;
-    void writePlan(Simulation simulation) throws IOException {
-        //starte mit einem spawnpoint -> iteriere über graph mittels kreuzungen
+    public void writePlan(List<Street> streets) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("plan.txt"));
 
-        writer = new BufferedWriter(new FileWriter("plan.txt"));
+        for (Street street : streets) {
+            writeStreet(writer, street);
+        }
+    }
 
-        SpawnPoint startPoint = simulation.getSpawnPoints().getFirst();
-        Queue<GridPoint> gridPointsToVisit = new ArrayDeque<>();
-        Set<GridPoint> gridPointsvisited = new HashSet<>();
+    public void writeStatistik(List<Street> streets) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("statistik.txt"));
+        writer.write(
+                "Gesamtanzahl Fahrzeuge pro 100m:"
+        );
+        writer.newLine();
+        for (Street street : streets) {
+            writer.write(street.getFirstPoint().getName()+"->"+street.getSecondPoint().getName()+": "
+            +street.getTotalCarsOnStreetPerOnehundredMeters());
+            writer.newLine();
+        }
+        writer.write(
+                "Maximale Anzahl Fahrzeuge pro 100m:"
+        );
+        writer.newLine();
+        for(Street street : streets) {
+            writer.write(street.getFirstPoint().getName()+"->"+street.getSecondPoint().getName()+": "
+                    +street.getMaximumCarsOnStreetPerOnehundredMeters());
+            writer.newLine();
+        }
+    }
 
-        gridPointsToVisit.add(startPoint);
+    public void writeFahrzeuge(int endTimeOfSimulation,List<Car> cars) throws IOException {
 
-        while(!gridPointsToVisit.isEmpty()) {
-            GridPoint currentPoint = gridPointsToVisit.poll();
+        BufferedWriter writer = new BufferedWriter(new FileWriter("fahrzeuge.txt"));
 
-            if (currentPoint instanceof SpawnPoint) {
-                SpawnPoint currentSpawnPoint = (SpawnPoint) currentPoint;
-                ArrayList<GridPoint> neighbours = currentSpawnPoint.getNeighbours();
-            } else {
-                Crossing currentCrossing = (Crossing) currentPoint;
+        Map<Integer, Map<Integer, Map<Point,Point>>> carPositionsPerTimestep = new HashMap<>();
+
+        for (Car car : cars) {
+            for (Map.Entry<Integer, Map<Point,Point>> positionEntry : car.getPositions().entrySet()) {
+
+                int timeStep = positionEntry.getKey();
+                Map<Point, Point> positionAndDestination = positionEntry.getValue();
+
+                carPositionsPerTimestep.computeIfAbsent(timeStep, t -> new HashMap<>()).put(car.getId(),positionAndDestination);
 
             }
+        }
 
-
+        for (int i = 0; i <= endTimeOfSimulation; i++) {
+            writer.write("*** t = "+i);
+            writer.newLine();
+            if (carPositionsPerTimestep.containsKey(i)) {
+                Map<Integer, Map<Point,Point>> currentPositionsByCarId = carPositionsPerTimestep.get(i);
+                for (Map.Entry<Integer, Map<Point,Point>> idAndPositionEntry : currentPositionsByCarId.entrySet()) {
+                    int carIDToPrint = idAndPositionEntry.getKey();
+                    Map<Point, Point> positionAndDestination = idAndPositionEntry.getValue();
+                    Map.Entry<Point, Point> positionAndDestinationToPrint = positionAndDestination.entrySet().iterator().next();
+                    Point position = positionAndDestinationToPrint.getKey();
+                    Point destination = positionAndDestinationToPrint.getValue();
+                    writer.write(position.getX()+" "+position.getY()+" "+destination.getX()+" "+destination.getY()+" "+carIDToPrint);
+                    writer.newLine();
+                }
+            }
         }
 
     }
 
-    void writeStatistik() {
-        //über die straßen, wie komme ich an die straßen? genauso wie bei writePlan
 
-    }
-
-    void writeFahrzeuge() {
-        //
-    }
-
-    void writeStreet(BufferedWriter writer, GridPoint currentPoint, GridPoint connectedPoint) throws IOException {
-        System.out.println("Street");
-        writer.write(currentPoint.getPoint().getX()+" "
-                +currentPoint.getPoint().getY()+" "
-                +connectedPoint.getPoint().getX()+" "
-                +connectedPoint.getPoint().getY());
+    private void writeStreet(BufferedWriter writer, Street street) throws IOException {
+        writer.write(street.getFirstPoint().getPoint().getX() + " "
+                + street.getFirstPoint().getPoint().getY() + " "
+                + street.getSecondPoint().getPoint().getX() + " "
+                + street.getSecondPoint().getPoint().getY());
         writer.newLine();
     }
-
 }

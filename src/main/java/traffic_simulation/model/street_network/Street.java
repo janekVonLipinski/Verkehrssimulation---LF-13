@@ -11,6 +11,8 @@ public class Street {
     private final GridPoint firstPoint;
     private final GridPoint secondPoint;
     private final double length;
+    private int totalCarCounter = 0;
+    private int maximumCarCounter = 0;
 
     public GridPoint getOtherPoint(GridPoint point) {
 
@@ -21,34 +23,38 @@ public class Street {
         return this.firstPoint;
     }
 
-    private int carCounter = 0;
-
-    public int increaseCarCounter() {
-        carCounter += 1;
-
-        return carCounter;
+    public int increaseTotalCarCounter() {
+        totalCarCounter += 1;
+        return totalCarCounter;
     }
 
-    public double getCarCounter() {
+    public int increaseMaximumCarCounter() {
+        maximumCarCounter += 1;
+        return maximumCarCounter;
+    }
+
+    public int decreaseMaximumCarCounter() {
+        maximumCarCounter -= 1;
+        return maximumCarCounter;
+    }
+
+    public double getMaximumCarsOnStreetPerOnehundredMeters() {
         Point subtractedPoint = firstPoint.getPoint().subtract(secondPoint.getPoint());
 
         double streetLength = subtractedPoint.getLength();
 
-        double carsPerOnehundredMeter = carCounter / streetLength;
+        double maximumCarsPerOnehundredMeter = maximumCarCounter / streetLength;
 
-        return carsPerOnehundredMeter;
+        return maximumCarsPerOnehundredMeter;
     }
 
-    //Dumme blöde funktion, aber ich habe die Sorge, dass folgendes Problem auftritt:
-    //Ich möchte den Nachbar eines Punktes haben, frage die Straße auf die der Punkt liegt ->
-    //Nun weiß ich nicht, ob Punkt auf Straße street.firstPoint oder street.secondPoint ist
-    //Es könnte also passieren wenn ich (der logik nach) davon ausgehe, das Punkt mein street.firstPoint ist
-    //und ich street.secondPoint als Nachbar deklariere, in Wahrheit gar nicht der Nachbar zurückgegeben wird
-    public GridPoint getOtherPoint(GridPoint point) {
-        if (point == this.firstPoint) {
-            return this.secondPoint;
-        } else {
-            return this.secondPoint;
-        }
+    public double getTotalCarsOnStreetPerOnehundredMeters() {
+        Point subtractedPoint = firstPoint.getPoint().subtract(secondPoint.getPoint());
+
+        double streetLength = subtractedPoint.getLength();
+
+        double totalCarsPerOnehundredMeter = totalCarCounter / streetLength;
+
+        return totalCarsPerOnehundredMeter;
     }
 }

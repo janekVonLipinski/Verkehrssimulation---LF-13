@@ -25,6 +25,7 @@ public class SpawnPoint extends GridPoint {
     private static final int EXPECTED_VALUE = 45;
     private static final int DEVIATION = 10;
     private int currentTick = 0;
+    private int currentID = 0;
 
 
     public SpawnPoint(Point point, double spawnTick, Street street, String name) {
@@ -35,6 +36,7 @@ public class SpawnPoint extends GridPoint {
     }
 
     public Car spawnCar() {
+        currentID++;
         currentTick++;
         boolean shouldSpawnCarInThisTick = currentTick % spawnTick == 0;
         // right now it spawns cars at t = 0
@@ -46,7 +48,7 @@ public class SpawnPoint extends GridPoint {
         if (!shouldSpawnCarInThisTick) {
             return null;
         }
-        return new Car(carVelocityInKmPerH, street, getPoint(), destination) ;
+        return new Car(currentID, carVelocityInKmPerH, street, getPoint(), destination) ;
     }
 
 }

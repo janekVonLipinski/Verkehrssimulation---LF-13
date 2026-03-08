@@ -35,7 +35,7 @@ public class Car {
         last_id++;
     }
 
-    public Car drive() {
+    public Car drive(int tick) {
         double distanceToDrive = velocity;
         //1 Tick = 1s => a car can drive a distance corresponding to its velocity
         boolean canDrive = true;
@@ -55,6 +55,7 @@ public class Car {
 
             if (!hasReachedStreet) {
                 location = nextPoint;
+                updatePositionLog(tick);
                 return this;
             }
 
@@ -74,6 +75,7 @@ public class Car {
             location = nextGridPointLocation;
             this.destination = destination;
             canDrive = distanceToDrive > 0;
+            updatePositionLog(tick);
         }
         
         return this;
@@ -114,5 +116,10 @@ public class Car {
         }
 
         return hasUnderShotInYDirection || hasUnderShotInXDirection;
+    }
+
+    private void updatePositionLog(int tick) {
+        var pointMap = positions.get(tick);
+        pointMap.put(location, destination.getPoint());
     }
 }

@@ -34,8 +34,8 @@ public class SpawnPoint extends GridPoint {
         this.name = name;
     }
 
-    public Car spawnCar() {
-        currentTick++;
+    public Car spawnCar(int currentTick) {
+
         boolean shouldSpawnCarInThisTick = currentTick % spawnTick == 0;
         // right now it spawns cars at t = 0
 

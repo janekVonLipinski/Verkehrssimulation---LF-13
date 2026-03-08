@@ -33,9 +33,6 @@ public class  Simulation {
 
         List<Car> cars = simulate();
 
-        //Intentionally not putting this into an extra function, since this code should only be
-        //called after a finished simulation
-
         writer.writeFahrzeuge(numberOfGivenTicks, cars);
         writer.writePlan(streets);
         writer.writeStatistic(streets);
@@ -48,17 +45,17 @@ public class  Simulation {
         int ticksDone = 0;
         //TODO wir haben Tickspeed, wollen aber wahrscheinlich jeden Tick simulieren -> fehlt atm
         while (ticksDone < numberOfGivenTicks) {
-            spawnCars();
-            simulateCars();
+            spawnCars(ticksDone);
+            simulateCars(ticksDone);
             ticksDone++;
         }
 
         return cars;
     }
 
-    private void spawnCars() {
+    private void spawnCars(int currentTick) {
         for (SpawnPoint spawnPoint : spawnPoints) {
-            Car car = spawnPoint.spawnCar();
+            Car car = spawnPoint.spawnCar(currentTick);
 
             if (car != null) {
                 cars.add(car);
@@ -66,12 +63,12 @@ public class  Simulation {
         }
     }
 
-    private void simulateCars() {
+    private void simulateCars(int currentTick) {
 
         List<Car> survivingCars = new ArrayList<>();
 
         for (Car car : cars) {
-            car = car.drive();
+            car = car.drive(currentTick);
 
             if (car != null) {
                 survivingCars.add(car);

@@ -25,7 +25,7 @@ class CarTest {
 
         Car sut = new Car(3.6 * 100, street, point, spawnPoint1);
 
-        Car resultingCar = sut.drive();
+        Car resultingCar = sut.drive(0);
 
         assertEquals(1, resultingCar.getLocation().getY());
     }
@@ -54,7 +54,7 @@ class CarTest {
 
         Car sut = new Car(1.5 * 3.6 * 100, first_street, point_start, crossing);
 
-        Car resultingCar = sut.drive();
+        Car resultingCar = sut.drive(0);
         assertEquals(1.5, resultingCar.getLocation().getY());
         assertEquals(second_street, sut.getCurrentStreet());
     }

@@ -71,18 +71,23 @@ public class OutPutWriter {
             for (int i = 0; i <= endTimeOfSimulation; i++) {
                 writer.write("*** t = " + i);
                 writer.newLine();
-                if (carPositionsPerTimestep.containsKey(i)) {
-                    Map<Integer, Map<Point, Point>> currentPositionsByCarId = carPositionsPerTimestep.get(i);
-                    for (Map.Entry<Integer, Map<Point, Point>> idAndPositionEntry : currentPositionsByCarId.entrySet()) {
-                        int carIDToPrint = idAndPositionEntry.getKey();
-                        Map<Point, Point> positionAndDestination = idAndPositionEntry.getValue();
-                        Map.Entry<Point, Point> positionAndDestinationToPrint = positionAndDestination.entrySet().iterator().next();
-                        Point position = positionAndDestinationToPrint.getKey();
-                        Point destination = positionAndDestinationToPrint.getValue();
-                        writer.write(position.getX() + " " + position.getY() + " " + destination.getX() + " " + destination.getY() + " " + carIDToPrint);
-                        writer.newLine();
-                    }
+
+                if (!carPositionsPerTimestep.containsKey(i)) {
+                    continue;
                 }
+
+                Map<Integer, Map<Point, Point>> currentPositionsByCarId = carPositionsPerTimestep.get(i);
+
+                for (Map.Entry<Integer, Map<Point, Point>> idAndPositionEntry : currentPositionsByCarId.entrySet()) {
+                    int carIDToPrint = idAndPositionEntry.getKey();
+                    Map<Point, Point> positionAndDestination = idAndPositionEntry.getValue();
+                    Map.Entry<Point, Point> positionAndDestinationToPrint = positionAndDestination.entrySet().iterator().next();
+                    Point position = positionAndDestinationToPrint.getKey();
+                    Point destination = positionAndDestinationToPrint.getValue();
+                    writer.write(position.getX() + " " + position.getY() + " " + destination.getX() + " " + destination.getY() + " " + carIDToPrint);
+                    writer.newLine();
+                }
+
             }
         }  catch (IOException ioe) {
             System.out.println(ioe.getMessage());

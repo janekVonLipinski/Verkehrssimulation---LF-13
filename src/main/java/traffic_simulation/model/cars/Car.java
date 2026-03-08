@@ -15,6 +15,7 @@ public class Car {
     @Getter
     private final int id;
     private final double velocity;
+    @Getter
     private GridPoint destination;
     @Getter
     private Street currentStreet;
@@ -23,9 +24,9 @@ public class Car {
     @Getter
     private final Map<Integer, Map<Point, Point>> positions = new HashMap<>();
 
-    private static int last_id = 0;
+    private static int last_id = 0; // nicht Thread save
     private static final double CONVERSION_FACTOR_KM_PER_H_T_M_PER_S = 3.6;
-    private static final Car CAR_WILL_BE_DELETED = null;
+
 
     public Car(double carVelocityInKmPerH, Street currentStreet, Point location, GridPoint destination) {
         this.id = last_id;
@@ -44,7 +45,6 @@ public class Car {
 
         while (true) {
 
-            //TODO in which Point am I. Must be possible to move in opposite direction
             Point nextPosition = calculateNextPosition(distanceToDrive);
 
             boolean hasReachedStreet = hasReachedEndOfStreet(nextPosition, destination.getPoint());
@@ -56,13 +56,14 @@ public class Car {
             }
 
             GridPoint nextGridPoint = destination;
-            
-            if (nextGridPoint instanceof SpawnPoint) {
-                return CAR_WILL_BE_DELETED;
+            boolean isSpawnPoint = nextGridPoint instanceof SpawnPoint;
+
+            if (isSpawnPoint) {
+                destination = null;
+                return this;
             }
 
             handleCrossing(nextGridPoint);
-
             distanceToDrive = calculateRemainingDistance(nextGridPoint.getPoint(), distanceToDrive);
         }
     }
@@ -73,12 +74,12 @@ public class Car {
         Crossing crossing = (Crossing) nextGridPoint;
 
         Street oldStreet = currentStreet;
-        currentStreet = crossing.getNextStreet(currentStreet);
+        this.currentStreet = crossing.getNextStreet(currentStreet);
         updateStreetCounter(currentStreet, oldStreet);
 
         GridPoint destination = currentStreet.getOtherPoint(crossing);
 
-        location = reachedGridPointLocation;
+        this.location = reachedGridPointLocation;
         this.destination = destination;
     }
 

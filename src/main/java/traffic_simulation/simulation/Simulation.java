@@ -17,9 +17,10 @@ public class  Simulation {
     @Getter
     private final List<SpawnPoint> spawnPoints;
     private final int maximumTicks;
-    private List<Car> cars = new ArrayList<>();
     private final OutPutWriter writer = new OutPutWriter();
     private final List<Street> streets;
+    private final List<Car> loggingCars = new ArrayList<>();
+    private List<Car> simulationCars = new ArrayList<>();
 
     public Simulation(InputReader.ParsingResult parsingResult) {
         this.spawnPoints = parsingResult.spawnPoints();
@@ -33,7 +34,7 @@ public class  Simulation {
 
         List<Car> cars = simulate();
 
-        writer.writeFahrzeuge(maximumTicks, cars);
+        writer.writeFahrzeuge(maximumTicks, loggingCars);
         writer.writePlan(streets);
         writer.writeStatistic(streets);
     }
@@ -48,7 +49,7 @@ public class  Simulation {
             ticksDone++;
         }
 
-        return cars;
+        return simulationCars;
     }
 
     private void spawnCars(int currentTick) {
@@ -56,7 +57,8 @@ public class  Simulation {
             Car car = spawnPoint.spawnCar(currentTick);
 
             if (car != null) {
-                cars.add(car);
+                simulationCars.add(car);
+                loggingCars.add(car);
             }
         }
     }
@@ -65,14 +67,14 @@ public class  Simulation {
 
         List<Car> survivingCars = new ArrayList<>();
 
-        for (Car car : cars) {
+        for (Car car : simulationCars) {
             car = car.drive(currentTick);
 
-            if (car != null) {
+            if (car.getDestination() != null) {
                 survivingCars.add(car);
             }
         }
 
-        cars = survivingCars;
+        simulationCars = survivingCars;
     }
 }

@@ -8,8 +8,6 @@ import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SimulationIntegrationTest {
 
 

@@ -94,14 +94,10 @@ public class InputReader {
                 .toList();
 
         for (SpawnPoint spawnPoint : spawnPoints) {
-            Street matchingStreet = streets.stream()
+            streets.stream()
                     .filter(s -> s.getFirstPoint() == spawnPoint || s.getSecondPoint() == spawnPoint)
-                    .findFirst()
-                    .orElse(null);
+                    .findFirst().ifPresent(spawnPoint::setStreet);
 
-            if (matchingStreet != null) {
-                spawnPoint.setStreet(matchingStreet);
-            }
         }
         return new ParsingResult(endtimeOfSimulation, tickspeed, spawnPoints,streets);
     }

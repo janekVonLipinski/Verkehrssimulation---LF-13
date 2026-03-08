@@ -1,12 +1,7 @@
 package traffic_simulation;
 
 import traffic_simulation.input_output.input.InputReader;
-import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 import traffic_simulation.simulation.Simulation;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 
@@ -16,9 +11,8 @@ public class Main {
 
         var reader = new InputReader();
         var input = reader.readFile(PATH_TO_FIRST_FILE);
+        var simulation = new Simulation(input);
 
-        var Simulation = new Simulation(input);
-
-        Simulation.simulate();
+        simulation.simulateAndWriteToFile();
     }
 }

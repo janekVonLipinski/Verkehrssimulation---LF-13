@@ -1,7 +1,6 @@
 package traffic_simulation.model.street_network.street_network_points;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import traffic_simulation.model.Point;
 import traffic_simulation.model.street_network.GridPoint;
 import traffic_simulation.model.street_network.Street;
@@ -45,5 +44,13 @@ public class Crossing extends GridPoint {
             neighbours.add(street.getOtherPoint(this));
         }
         return neighbours;
+    }
+
+    @Override
+    public String toString() {
+        return "Crossing{" +
+                "streets=" + streets +
+                ", random=" + random +
+                '}';
     }
 }

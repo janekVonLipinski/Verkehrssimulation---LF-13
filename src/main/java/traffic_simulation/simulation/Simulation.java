@@ -16,35 +16,33 @@ public class  Simulation {
 
     @Getter
     private final List<SpawnPoint> spawnPoints;
-    private final int numberOfGivenTicks;
+    private final int maximumTicks;
     private List<Car> cars = new ArrayList<>();
     private final OutPutWriter writer = new OutPutWriter();
     private final List<Street> streets;
 
     public Simulation(InputReader.ParsingResult parsingResult) {
         this.spawnPoints = parsingResult.spawnPoints();
-        this.numberOfGivenTicks = parsingResult.endtimeOfSimulation();
+        this.maximumTicks = parsingResult.endtimeOfSimulation();
         this.streets = parsingResult.streets();
     }
 
-    //convenience Method, since I dont want evrey test to create outputfiles
 
-    public List<Car> simulateAndWriteToFile() {
+    public void simulateAndWriteToFile() {
+        //convenience Method, since I don't want every test to create outputfiles
 
         List<Car> cars = simulate();
 
-        writer.writeFahrzeuge(numberOfGivenTicks, cars);
+        writer.writeFahrzeuge(maximumTicks, cars);
         writer.writePlan(streets);
         writer.writeStatistic(streets);
-
-        return cars;
     }
 
     public List<Car> simulate() {
 
         int ticksDone = 0;
         //TODO wir haben Tickspeed, wollen aber wahrscheinlich jeden Tick simulieren -> fehlt atm
-        while (ticksDone < numberOfGivenTicks) {
+        while (ticksDone < maximumTicks) {
             spawnCars(ticksDone);
             simulateCars(ticksDone);
             ticksDone++;

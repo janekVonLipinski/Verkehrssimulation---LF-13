@@ -32,6 +32,8 @@ public class Car {
         this.currentStreet = currentStreet;
         this.location = location;
         this.destination = destination;
+        this.currentStreet.increaseMaximumCarCounter();
+        this.currentStreet.increaseTotalCarCounter();
         last_id++;
     }
 
@@ -43,42 +45,56 @@ public class Car {
         while (canDrive) {
 
             //TODO in which Point am I. Must be possible to move in opposite direction
-            GridPoint otherPoint = currentStreet.getOtherPoint(destination);
-            Point destinationPoint = this.destination.getPoint();
-            Point direction = destinationPoint.subtract(otherPoint.getPoint());
-            Point normalizedDirection = direction.normalize();
+            Point nextPosition = calculateNextPosition(distanceToDrive);
 
-            Point directionWithVelocity = normalizedDirection.multiply(distanceToDrive); // unitHandling is handled during Car creation
-            Point nextPoint = location.add(directionWithVelocity);
-
-            boolean hasReachedStreet = hasReachedEndOfStreet(nextPoint, destination.getPoint());
+            boolean hasReachedStreet = hasReachedEndOfStreet(nextPosition, destination.getPoint());
 
             if (!hasReachedStreet) {
-                location = nextPoint;
+                location = nextPosition;
                 updatePositionLog(tick);
                 return this;
             }
 
             GridPoint nextGridPoint = destination;
 
-            Point nextGridPointLocation = nextGridPoint.getPoint();
+            Point reachedGridPointLocation = nextGridPoint.getPoint();
             
             if (nextGridPoint instanceof SpawnPoint) {
                 return null;
             }
-            
+
             Crossing crossing = (Crossing) nextGridPoint;
+
+            Street oldStreet = currentStreet;
             currentStreet = crossing.getNextStreet(currentStreet);
+            updateStreetCounter(currentStreet, oldStreet);
+
             GridPoint destination = currentStreet.getOtherPoint(crossing);
 
-            distanceToDrive = calculateRemainingDistance(nextGridPointLocation, distanceToDrive);
-            location = nextGridPointLocation;
+            distanceToDrive = calculateRemainingDistance(reachedGridPointLocation, distanceToDrive);
+            location = reachedGridPointLocation;
             this.destination = destination;
             canDrive = distanceToDrive > 0;
-            updatePositionLog(tick);
         }
         
         return this;
+    }
+
+    private void updateStreetCounter(Street currentStreet, Street oldStreet) {
+        oldStreet.decreaseMaximumCarCounter();
+        currentStreet.increaseTotalCarCounter();
+        currentStreet.increaseMaximumCarCounter();
+    }
+
+    private Point calculateNextPosition(double distanceToDrive) {
+        GridPoint otherPoint = currentStreet.getOtherPoint(destination);
+        Point destinationPoint = this.destination.getPoint();
+        Point direction = destinationPoint.subtract(otherPoint.getPoint());
+        Point normalizedDirection = direction.normalize();
+
+        Point directionWithVelocity = normalizedDirection.multiply(distanceToDrive); // unitHandling is handled during Car creation
+        Point nextPoint = location.add(directionWithVelocity);
+        return nextPoint;
     }
 
     private double calculateRemainingDistance(Point nextGridPointLocation, double distanceToDrive) {
@@ -88,7 +104,6 @@ public class Car {
     }
 
     private boolean hasReachedEndOfStreet(Point nextPoint, Point destinationPoint) {
-        //TODO is it possible to make this method less ugly
         double xOrientation = destinationPoint.getX();
         double yOrientation = destinationPoint.getY();
 
@@ -102,7 +117,6 @@ public class Car {
         boolean hasUnderShotInYDirection = nextPoint.getY() < destinationPoint.getY();
 
 
-        //TODO this is wrong, if we move parallel to axis
         if (isXOrientationGreaterZero && isYOrientationGreaterZero) {
             return hasOverShotInXDirection || hasOverShotInYDirection;
         }
@@ -119,7 +133,7 @@ public class Car {
     }
 
     private void updatePositionLog(int tick) {
-        var pointMap = positions.get(tick);
+        var pointMap = positions.computeIfAbsent(tick, k -> new HashMap<>());
         pointMap.put(location, destination.getPoint());
     }
 }

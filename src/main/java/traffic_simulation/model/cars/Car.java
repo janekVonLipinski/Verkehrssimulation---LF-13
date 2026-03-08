@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Car {
+
+    private static int last_id = 0;
     @Getter
     private int id;
     private final double velocity;
@@ -23,12 +25,13 @@ public class Car {
     private final Map<Integer, Map<Point, Point>> positions = new HashMap<>();
     private static final double CONVERSION_FACTOR_KM_PER_H_T_M_PER_S = 3.6;
 
-    public Car(int id, double carVelocityInKmPerH, Street currentStreet, Point location, GridPoint destination) {
-        this.id = id;
+    public Car(double carVelocityInKmPerH, Street currentStreet, Point location, GridPoint destination) {
+        this.id = last_id;
         this.velocity = carVelocityInKmPerH / (CONVERSION_FACTOR_KM_PER_H_T_M_PER_S * 100);
         this.currentStreet = currentStreet;
         this.location = location;
         this.destination = destination;
+        last_id++;
     }
 
     public Car drive() {

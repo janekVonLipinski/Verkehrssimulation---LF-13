@@ -38,7 +38,7 @@ public class Crossing extends GridPoint {
         return possibleStreets.get(randomStreetIndex);
     }
 
-    @Override
+    //@Override
     public ArrayList<GridPoint> getNeighbours() {
         ArrayList<GridPoint> neighbours = new ArrayList<>();
         for (Street street : this.streets.keySet()) {

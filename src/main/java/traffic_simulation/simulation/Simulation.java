@@ -2,6 +2,7 @@ package traffic_simulation.simulation;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import traffic_simulation.input_output.input.InputReader;
 import traffic_simulation.model.cars.Car;
 import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 
@@ -13,12 +14,18 @@ public class  Simulation {
 
     @Getter
     private final List<SpawnPoint> spawnPoints;
+    private final int numberOfGivenTicks;
     private List<Car> cars = new ArrayList<>();
 
-    public List<Car> simulate(int numberOfGivenTicks) {
+    public Simulation(InputReader.ParsingResult parsingResult) {
+        this.spawnPoints = parsingResult.spawnPoints();
+        this.numberOfGivenTicks = parsingResult.endtimeOfSimulation();
+    }
+
+    public List<Car> simulate() {
 
         int ticksDone = 0;
-
+        //TODO wir haben Tickspeed, wollen aber wahrscheinlich jeden Tick simulieren -> fehlt atm
         while (ticksDone < numberOfGivenTicks) {
             spawnCars();
             simulateCars();

@@ -72,9 +72,7 @@ public class InputReader {
 
 
                 String[] p = line.split(" ");
-                for(String x: p){
-                    System.out.println(x);
-                }
+
                 String name = p[0];
                 double x = Double.parseDouble(p[1]);
                 double y = Double.parseDouble(p[2]);

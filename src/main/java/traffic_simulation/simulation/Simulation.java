@@ -32,7 +32,7 @@ public class  Simulation {
     public void simulateAndWriteToFile() {
         //convenience Method, since I don't want every test to create outputfiles
 
-        List<Car> cars = simulate();
+        simulate();
 
         writer.writeFahrzeuge(maximumTicks, loggingCars);
         writer.writePlan(streets);

@@ -42,8 +42,9 @@ public class Car {
     public Car drive(int tick) {
         double distanceToDrive = velocity;
         //1 Tick = 1s => a car can drive a distance corresponding to its velocity
+        boolean canDrive = true;
 
-        while (true) {
+        while (canDrive) {
 
             Point nextPosition = calculateNextPosition(distanceToDrive);
 
@@ -65,7 +66,11 @@ public class Car {
 
             handleCrossing(nextGridPoint);
             distanceToDrive = calculateRemainingDistance(nextGridPoint.getPoint(), distanceToDrive);
+            this.location = nextGridPoint.getPoint();
+            canDrive = distanceToDrive > 0;
         }
+
+        return this;
     }
 
     private void handleCrossing(GridPoint nextGridPoint) {
@@ -79,7 +84,6 @@ public class Car {
 
         GridPoint destination = currentStreet.getOtherPoint(crossing);
 
-        this.location = reachedGridPointLocation;
         this.destination = destination;
     }
 

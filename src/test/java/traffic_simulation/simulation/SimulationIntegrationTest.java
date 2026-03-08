@@ -28,7 +28,7 @@ class SimulationIntegrationTest {
         sp2.setStreet(street);
 
         Simulation simulation = new Simulation(
-                List.of(sp1, sp2), 100
+                List.of(sp1, sp2), 100, List.of(street)
         );
 
         List<Car> remainingCars = simulation.simulate();

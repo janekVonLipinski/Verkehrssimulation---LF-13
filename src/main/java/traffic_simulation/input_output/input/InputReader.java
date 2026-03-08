@@ -87,6 +87,26 @@ public class InputReader {
             System.out.println("Reading error "+ex);
         }
 
+        create_streets(path, gridPoints, streets);
+        var spawnPoints = gridPoints.stream()
+                .filter(i -> i instanceof SpawnPoint)
+                .map(i -> (SpawnPoint) i)
+                .toList();
+
+        for (SpawnPoint spawnPoint : spawnPoints) {
+            Street matchingStreet = streets.stream()
+                    .filter(s -> s.getFirstPoint() == spawnPoint || s.getSecondPoint() == spawnPoint)
+                    .findFirst()
+                    .orElse(null);
+
+            if (matchingStreet != null) {
+                spawnPoint.setStreet(matchingStreet);
+            }
+        }
+        return new ParsingResult(endtimeOfSimulation, tickspeed, spawnPoints,streets);
+    }
+
+    private void create_streets(String path, List<GridPoint> gridPoints, List<Street> streets) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
             String line;
             boolean isCrossing = false;
@@ -159,22 +179,6 @@ public class InputReader {
         catch (IOException ex){
             System.out.println("Reading error "+ex);
         }
-        var spawnPoints = gridPoints.stream()
-                .filter(i -> i instanceof SpawnPoint)
-                .map(i -> (SpawnPoint) i)
-                .toList();
-
-        for (SpawnPoint spawnPoint : spawnPoints) {
-            Street matchingStreet = streets.stream()
-                    .filter(s -> s.getFirstPoint() == spawnPoint || s.getSecondPoint() == spawnPoint)
-                    .findFirst()
-                    .orElse(null);
-
-            if (matchingStreet != null) {
-                spawnPoint.setStreet(matchingStreet);
-            }
-        }
-        return new ParsingResult(endtimeOfSimulation, tickspeed, spawnPoints,streets);
     }
 }
 

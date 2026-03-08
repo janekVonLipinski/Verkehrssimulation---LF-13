@@ -25,6 +25,7 @@ public class Car {
 
     private static int last_id = 0;
     private static final double CONVERSION_FACTOR_KM_PER_H_T_M_PER_S = 3.6;
+    private static final Car CAR_WILL_BE_DELETED = null;
 
     public Car(double carVelocityInKmPerH, Street currentStreet, Point location, GridPoint destination) {
         this.id = last_id;
@@ -40,9 +41,8 @@ public class Car {
     public Car drive(int tick) {
         double distanceToDrive = velocity;
         //1 Tick = 1s => a car can drive a distance corresponding to its velocity
-        boolean canDrive = true;
-        
-        while (canDrive) {
+
+        while (true) {
 
             //TODO in which Point am I. Must be possible to move in opposite direction
             Point nextPosition = calculateNextPosition(distanceToDrive);
@@ -56,28 +56,30 @@ public class Car {
             }
 
             GridPoint nextGridPoint = destination;
-
-            Point reachedGridPointLocation = nextGridPoint.getPoint();
             
             if (nextGridPoint instanceof SpawnPoint) {
-                return null;
+                return CAR_WILL_BE_DELETED;
             }
 
-            Crossing crossing = (Crossing) nextGridPoint;
+            handleCrossing(nextGridPoint);
 
-            Street oldStreet = currentStreet;
-            currentStreet = crossing.getNextStreet(currentStreet);
-            updateStreetCounter(currentStreet, oldStreet);
-
-            GridPoint destination = currentStreet.getOtherPoint(crossing);
-
-            distanceToDrive = calculateRemainingDistance(reachedGridPointLocation, distanceToDrive);
-            location = reachedGridPointLocation;
-            this.destination = destination;
-            canDrive = distanceToDrive > 0;
+            distanceToDrive = calculateRemainingDistance(nextGridPoint.getPoint(), distanceToDrive);
         }
-        
-        return this;
+    }
+
+    private void handleCrossing(GridPoint nextGridPoint) {
+
+        Point reachedGridPointLocation = nextGridPoint.getPoint();
+        Crossing crossing = (Crossing) nextGridPoint;
+
+        Street oldStreet = currentStreet;
+        currentStreet = crossing.getNextStreet(currentStreet);
+        updateStreetCounter(currentStreet, oldStreet);
+
+        GridPoint destination = currentStreet.getOtherPoint(crossing);
+
+        location = reachedGridPointLocation;
+        this.destination = destination;
     }
 
     private void updateStreetCounter(Street currentStreet, Street oldStreet) {

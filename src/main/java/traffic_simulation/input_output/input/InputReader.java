@@ -140,10 +140,18 @@ public class InputReader {
                         if (target == null) {
                             continue;
                         }
+
                         Street street = new Street(crossing, target, crossing.getPoint().getDistanceToPoint(target.getPoint()));
+                        Street streetOppositeDirection =
+                                new Street(target, crossing, crossing.getPoint().getDistanceToPoint(target.getPoint()));
+
                         streets.add(street);
+                        streets.add(streetOppositeDirection);
+
                         Crossing casted_crossing = (Crossing) crossing;
+
                         casted_crossing.addStreetToMap(street, probability);
+                        casted_crossing.addStreetToMap(streetOppositeDirection, probability);
                     }
                 }
             }

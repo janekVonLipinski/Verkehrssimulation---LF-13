@@ -1,5 +1,6 @@
 package traffic_simulation.simulation;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import traffic_simulation.model.cars.Car;
 import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
@@ -8,8 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class Simulation {
+public class  Simulation {
 
+    @Getter
     private final List<SpawnPoint> spawnPoints;
     private List<Car> cars = new ArrayList<>();
 

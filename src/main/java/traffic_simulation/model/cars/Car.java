@@ -7,17 +7,24 @@ import traffic_simulation.model.street_network.Street;
 import traffic_simulation.model.street_network.street_network_points.Crossing;
 import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Car {
-    
+    @Getter
+    private int id;
     private final double velocity;
     private GridPoint destination;
     @Getter
     private Street currentStreet;
     @Getter
     private Point location;
+    @Getter
+    private final Map<Integer, Map<Point, Point>> positions = new HashMap<>();
     private static final double CONVERSION_FACTOR_KM_PER_H_T_M_PER_S = 3.6;
 
-    public Car(double carVelocityInKmPerH, Street currentStreet, Point location, GridPoint destination) {
+    public Car(int id, double carVelocityInKmPerH, Street currentStreet, Point location, GridPoint destination) {
+        this.id = id;
         this.velocity = carVelocityInKmPerH / (CONVERSION_FACTOR_KM_PER_H_T_M_PER_S * 100);
         this.currentStreet = currentStreet;
         this.location = location;

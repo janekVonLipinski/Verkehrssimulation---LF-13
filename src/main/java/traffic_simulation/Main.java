@@ -5,12 +5,18 @@ import traffic_simulation.simulation.Simulation;
 
 public class Main {
 
-    private static final String PATH_TO_FIRST_FILE = "src/main/resources/IHK_01/Eingabe.txt";
-
     public static void main(String[] args) {
 
+        if (args.length == 0) {
+            throw new IllegalArgumentException(
+                    "Call with the path of the input file: " +
+                    "java -jar traffic_simulator.jar <path-to-file>");
+        }
+
+        String path_to_file = args[0];
+
         var reader = new InputReader();
-        var input = reader.readFile(PATH_TO_FIRST_FILE);
+        var input = reader.readFile(path_to_file);
         var simulation = new Simulation(input);
 
         simulation.simulateAndWriteToFile();

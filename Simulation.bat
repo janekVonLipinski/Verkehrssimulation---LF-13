@@ -1,8 +1,8 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 
-set "JAR_PATH=%~dp0TestRunner.jar"
-set "TEST_ROOT=%~dp0tests"
+set "JAR_PATH=%~dp0out\artifacts\Verkehrssimulation_jar\Verkehrssimulation.jar"
+set "TEST_ROOT=%~dp0src\main\resources\input"
 
 if not exist "%JAR_PATH%" (
     echo Fehler: Jar nicht gefunden: %JAR_PATH%

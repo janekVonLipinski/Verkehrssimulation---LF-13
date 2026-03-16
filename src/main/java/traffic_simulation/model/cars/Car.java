@@ -11,9 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Car {
+
     @Getter
-    private int id;
+    private final int id;
     private final double velocity;
+    @Getter
     private GridPoint destination;
     @Getter
     private Street currentStreet;
@@ -21,58 +23,85 @@ public class Car {
     private Point location;
     @Getter
     private final Map<Integer, Map<Point, Point>> positions = new HashMap<>();
+
+    private static int last_id = 0; // nicht Thread save
     private static final double CONVERSION_FACTOR_KM_PER_H_T_M_PER_S = 3.6;
 
-    public Car(int id, double carVelocityInKmPerH, Street currentStreet, Point location, GridPoint destination) {
-        this.id = id;
+
+    public Car(double carVelocityInKmPerH, Street currentStreet, Point location, GridPoint destination) {
+        this.id = last_id;
         this.velocity = carVelocityInKmPerH / (CONVERSION_FACTOR_KM_PER_H_T_M_PER_S * 100);
         this.currentStreet = currentStreet;
         this.location = location;
         this.destination = destination;
+        this.currentStreet.increaseMaximumCarCounter();
+        this.currentStreet.increaseTotalCarCounter();
+        last_id++;
     }
 
-    public Car drive() {
+    public Car drive(int tick) {
         double distanceToDrive = velocity;
         //1 Tick = 1s => a car can drive a distance corresponding to its velocity
         boolean canDrive = true;
-        
+
         while (canDrive) {
 
-            //TODO in which Point am I. Must be possible to move in opposite direction
-            GridPoint otherPoint = currentStreet.getOtherPoint(destination);
-            Point destinationPoint = this.destination.getPoint();
-            Point direction = destinationPoint.subtract(otherPoint.getPoint());
-            Point normalizedDirection = direction.normalize();
+            Point nextPosition = calculateNextPosition(distanceToDrive);
 
-            Point directionWithVelocity = normalizedDirection.multiply(distanceToDrive); // unitHandling is handled during Car creation
-            Point nextPoint = location.add(directionWithVelocity);
-
-            boolean hasReachedStreet = hasReachedEndOfStreet(nextPoint, destination.getPoint());
+            boolean hasReachedStreet = hasReachedEndOfStreet(nextPosition, destination.getPoint());
 
             if (!hasReachedStreet) {
-                location = nextPoint;
+                location = nextPosition;
+                updatePositionLog(tick);
                 return this;
             }
 
             GridPoint nextGridPoint = destination;
+            boolean isSpawnPoint = nextGridPoint instanceof SpawnPoint;
 
-            Point nextGridPointLocation = nextGridPoint.getPoint();
-            
-            if (nextGridPoint instanceof SpawnPoint) {
-                return null;
+            if (isSpawnPoint) {
+                destination = null;
+                return this;
             }
-            
-            Crossing crossing = (Crossing) nextGridPoint;
-            currentStreet = crossing.getNextStreet(currentStreet);
-            GridPoint destination = currentStreet.getOtherPoint(crossing);
 
-            distanceToDrive = calculateRemainingDistance(nextGridPointLocation, distanceToDrive);
-            location = nextGridPointLocation;
-            this.destination = destination;
+            handleCrossing(nextGridPoint);
+            distanceToDrive = calculateRemainingDistance(nextGridPoint.getPoint(), distanceToDrive);
+            this.location = nextGridPoint.getPoint();
             canDrive = distanceToDrive > 0;
         }
-        
+
         return this;
+    }
+
+    private void handleCrossing(GridPoint nextGridPoint) {
+
+        Point reachedGridPointLocation = nextGridPoint.getPoint();
+        Crossing crossing = (Crossing) nextGridPoint;
+
+        Street oldStreet = currentStreet;
+        this.currentStreet = crossing.getNextStreet(currentStreet);
+        updateStreetCounter(currentStreet, oldStreet);
+
+        GridPoint destination = currentStreet.getOtherPoint(crossing);
+
+        this.destination = destination;
+    }
+
+    private void updateStreetCounter(Street currentStreet, Street oldStreet) {
+        oldStreet.decreaseMaximumCarCounter();
+        currentStreet.increaseTotalCarCounter();
+        currentStreet.increaseMaximumCarCounter();
+    }
+
+    private Point calculateNextPosition(double distanceToDrive) {
+        GridPoint otherPoint = currentStreet.getOtherPoint(destination);
+        Point destinationPoint = this.destination.getPoint();
+        Point direction = destinationPoint.subtract(otherPoint.getPoint());
+        Point normalizedDirection = direction.normalize();
+
+        Point directionWithVelocity = normalizedDirection.multiply(distanceToDrive); // unitHandling is handled during Car creation
+        Point nextPoint = location.add(directionWithVelocity);
+        return nextPoint;
     }
 
     private double calculateRemainingDistance(Point nextGridPointLocation, double distanceToDrive) {
@@ -82,7 +111,6 @@ public class Car {
     }
 
     private boolean hasReachedEndOfStreet(Point nextPoint, Point destinationPoint) {
-        //TODO is it possible to make this method less ugly
         double xOrientation = destinationPoint.getX();
         double yOrientation = destinationPoint.getY();
 
@@ -96,7 +124,6 @@ public class Car {
         boolean hasUnderShotInYDirection = nextPoint.getY() < destinationPoint.getY();
 
 
-        //TODO this is wrong, if we move parallel to axis
         if (isXOrientationGreaterZero && isYOrientationGreaterZero) {
             return hasOverShotInXDirection || hasOverShotInYDirection;
         }
@@ -110,5 +137,10 @@ public class Car {
         }
 
         return hasUnderShotInYDirection || hasUnderShotInXDirection;
+    }
+
+    private void updatePositionLog(int tick) {
+        var pointMap = positions.computeIfAbsent(tick, k -> new HashMap<>());
+        pointMap.put(location, destination.getPoint());
     }
 }

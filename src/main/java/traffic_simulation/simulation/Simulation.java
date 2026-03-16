@@ -2,7 +2,10 @@ package traffic_simulation.simulation;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import traffic_simulation.input_output.input.InputReader;
+import traffic_simulation.input_output.output_writer.OutPutWriter;
 import traffic_simulation.model.cars.Car;
+import traffic_simulation.model.street_network.Street;
 import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 
 import java.util.ArrayList;
@@ -13,43 +16,65 @@ public class  Simulation {
 
     @Getter
     private final List<SpawnPoint> spawnPoints;
-    private List<Car> cars = new ArrayList<>();
+    private final int maximumTicks;
+    private final OutPutWriter writer = new OutPutWriter();
+    private final List<Street> streets;
+    private final List<Car> loggingCars = new ArrayList<>();
+    private List<Car> simulationCars = new ArrayList<>();
 
-    public List<Car> simulate(int numberOfGivenTicks) {
+    public Simulation(InputReader.ParsingResult parsingResult) {
+        this.spawnPoints = parsingResult.spawnPoints();
+        this.maximumTicks = parsingResult.endtimeOfSimulation();
+        this.streets = parsingResult.streets();
+    }
+
+
+    public void simulateAndWriteToFile() {
+        //convenience Method, since I don't want every test to create outputfiles
+
+        simulate();
+
+        writer.writeFahrzeuge(maximumTicks, loggingCars);
+        writer.writePlan(streets);
+        writer.writeStatistic(streets);
+    }
+
+    public List<Car> simulate() {
 
         int ticksDone = 0;
-
-        while (ticksDone < numberOfGivenTicks) {
-            spawnCars();
-            simulateCars();
+        //TODO wir haben Tickspeed, wollen aber wahrscheinlich jeden Tick simulieren -> fehlt atm
+        while (ticksDone < maximumTicks) {
+            spawnCars(ticksDone);
+            simulateCars(ticksDone);
             ticksDone++;
         }
 
-        return cars;
+        return simulationCars;
     }
 
-    private void spawnCars() {
+    private void spawnCars(int currentTick) {
         for (SpawnPoint spawnPoint : spawnPoints) {
-            Car car = spawnPoint.spawnCar();
+            Car car = spawnPoint.spawnCar(currentTick);
 
             if (car != null) {
-                cars.add(car);
+                simulationCars.add(car);
+                loggingCars.add(car);
             }
         }
     }
 
-    private void simulateCars() {
+    private void simulateCars(int currentTick) {
 
         List<Car> survivingCars = new ArrayList<>();
 
-        for (Car car : cars) {
-            car = car.drive();
+        for (Car car : simulationCars) {
+            car = car.drive(currentTick);
 
-            if (car != null) {
+            if (car.getDestination() != null) {
                 survivingCars.add(car);
             }
         }
 
-        cars = survivingCars;
+        simulationCars = survivingCars;
     }
 }

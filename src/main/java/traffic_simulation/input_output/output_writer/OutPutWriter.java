@@ -4,6 +4,7 @@ import traffic_simulation.model.Point;
 import traffic_simulation.model.cars.Car;
 import traffic_simulation.model.street_network.Street;
 
+import java.io.File;
 import java.util.*;
 
 import java.io.BufferedWriter;
@@ -15,8 +16,10 @@ public class OutPutWriter {
 
     private static final String BASE_PATH = "src/main/resources/output/";
 
-    public void writePlan(List<Street> streets) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(BASE_PATH + "plan.txt"))) {
+    public void writePlan(List<Street> streets, String name) {
+        String directoryName = BASE_PATH + name;
+        new File(directoryName).mkdir();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryName + "/plan.txt"))) {
 
             for (Street street : streets) {
                 writeStreet(writer, street);
@@ -26,8 +29,12 @@ public class OutPutWriter {
         }
     }
 
-    public void writeStatistic(List<Street> streets) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(BASE_PATH + "statistik.txt"))) {
+    public void writeStatistic(List<Street> streets, String name) {
+
+        String directoryName = BASE_PATH + name;
+        new File(directoryName).mkdir();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryName + "/statistik.txt"))) {
             writer.write(
                     "Gesamtanzahl Fahrzeuge pro 100m:"
             );
@@ -51,9 +58,11 @@ public class OutPutWriter {
         }
     }
 
-    public void writeFahrzeuge(int endTimeOfSimulation, List<Car> cars) {
+    public void writeFahrzeuge(int endTimeOfSimulation, List<Car> cars, String name) {
+        String directoryName = BASE_PATH + name;
+        new File(directoryName).mkdir();
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(BASE_PATH + "fahrzeuge.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryName + "/fahrzeuge.txt"))) {
 
             Map<Integer, Map<Integer, Map<Point, Point>>> carPositionsPerTimestep = new HashMap<>();
 

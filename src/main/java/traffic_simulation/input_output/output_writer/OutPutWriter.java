@@ -18,7 +18,7 @@ public class OutPutWriter {
 
     public void writePlan(List<Street> streets, String name) {
         String directoryName = BASE_PATH + name;
-        new File(directoryName).mkdir();
+        new File(directoryName).mkdirs();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryName + "/plan.txt"))) {
 
             for (Street street : streets) {
@@ -32,7 +32,7 @@ public class OutPutWriter {
     public void writeStatistic(List<Street> streets, String name) {
 
         String directoryName = BASE_PATH + name;
-        new File(directoryName).mkdir();
+        new File(directoryName).mkdirs();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryName + "/statistik.txt"))) {
             writer.write(
@@ -60,7 +60,7 @@ public class OutPutWriter {
 
     public void writeFahrzeuge(int endTimeOfSimulation, List<Car> cars, String name) {
         String directoryName = BASE_PATH + name;
-        new File(directoryName).mkdir();
+        new File(directoryName).mkdirs();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryName + "/fahrzeuge.txt"))) {
 

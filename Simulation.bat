@@ -20,11 +20,9 @@ echo Starte alle Testfaelle unter: %TEST_ROOT%
 echo.
 
 for /d %%D in ("%TEST_ROOT%\*") do (
-    for %%F in ("%%~fD\*.txt") do (
-        java -jar "%JAR_PATH%" "%%~fF"
-        if errorlevel 1 (
-            echo Fehler beim Lauf: %%~fF
-        )
+    java -jar "%JAR_PATH%" "%%~fD\Eingabe.txt"
+    if errorlevel 1 (
+        echo Fehler beim Lauf: %%~fD\Eingabe.txt
     )
 )
 

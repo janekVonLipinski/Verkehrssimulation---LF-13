@@ -15,10 +15,14 @@ public class Main {
 
         String path_to_file = args[0];
 
+        System.out.println("Start simulation of file: " + path_to_file);
+
         var reader = new InputReader();
         var input = reader.readFile(path_to_file);
         var simulation = new Simulation(input);
 
         simulation.simulateAndWriteToFile();
+
+        System.out.println("Finished simulation");
     }
 }

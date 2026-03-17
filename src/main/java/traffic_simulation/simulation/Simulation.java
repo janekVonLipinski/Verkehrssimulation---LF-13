@@ -29,14 +29,14 @@ public class  Simulation {
     }
 
 
-    public void simulateAndWriteToFile() {
+    public void simulateAndWriteToFile(String name) {
         //convenience Method, since I don't want every test to create outputfiles
 
         simulate();
 
-        writer.writeFahrzeuge(maximumTicks, loggingCars);
-        writer.writePlan(streets);
-        writer.writeStatistic(streets);
+        writer.writeFahrzeuge(maximumTicks, loggingCars, name);
+        writer.writePlan(streets, name);
+        writer.writeStatistic(streets, name);
     }
 
     public List<Car> simulate() {

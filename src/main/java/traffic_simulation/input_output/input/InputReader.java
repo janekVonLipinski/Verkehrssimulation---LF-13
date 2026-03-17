@@ -10,7 +10,7 @@ import java.util.*;
 @Getter
 public class InputReader {
 
-    public record ParsingResult(int endtimeOfSimulation, int tickspeed, List<SpawnPoint> spawnPoints,  List<Street> streets) {}
+    public record ParsingResult(int endtimeOfSimulation, double tickspeed, List<SpawnPoint> spawnPoints,  List<Street> streets) {}
 
 
     public ParsingResult readFile(String path){
@@ -19,7 +19,7 @@ public class InputReader {
         List<Street> streets = new ArrayList<>();
 
         int endtimeOfSimulation = 0;
-        int tickspeed = 0;
+        double tickspeed = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
@@ -43,7 +43,7 @@ public class InputReader {
                     line = br.readLine().trim();
                     String[] parts = line.split(" ");
                     endtimeOfSimulation = Integer.parseInt(parts[0]);
-                    tickspeed = Integer.parseInt(parts[1]);
+                    tickspeed = Double.parseDouble(parts[1]);
                     continue;
                 }
 
@@ -62,10 +62,10 @@ public class InputReader {
                 if (isspawnPoint) {
                     String[] p = line.split(" ");
                     String name = p[0];
-                    int x = Integer.parseInt(p[1]);
-                    int y = Integer.parseInt(p[2]);
+                    double x = Double.parseDouble(p[1]);
+                    double y = Double.parseDouble(p[2]);
                     //p[3] is das Ziel des Spawnpoints und wird nicht genutzt
-                    int spawnTick = Integer.parseInt(p[4]);
+                    double spawnTick = Double.parseDouble(p[4]);
                     gridPoints.add(new SpawnPoint(new Point(x, y), spawnTick, null, name));
                     continue;
                 }

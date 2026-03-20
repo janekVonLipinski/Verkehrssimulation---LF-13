@@ -10,7 +10,7 @@ import java.util.*;
 @Getter
 public class InputReader {
 
-    public record ParsingResult(int endtimeOfSimulation, double tickspeed, List<SpawnPoint> spawnPoints,  List<Street> streets) {}
+    public record ParsingResult(int endtimeOfSimulation, int tickspeed, List<SpawnPoint> spawnPoints,  List<Street> streets) {}
 
 
     public ParsingResult readFile(String path){
@@ -19,7 +19,7 @@ public class InputReader {
         List<Street> streets = new ArrayList<>();
 
         int endtimeOfSimulation = 0;
-        double tickspeed = 0;
+        int tickspeed = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
@@ -43,7 +43,7 @@ public class InputReader {
                     line = br.readLine().trim();
                     String[] parts = line.split(" ");
                     endtimeOfSimulation = Integer.parseInt(parts[0]);
-                    tickspeed = Double.parseDouble(parts[1]);
+                    tickspeed = Integer.parseInt(parts[1]);
                     continue;
                 }
 

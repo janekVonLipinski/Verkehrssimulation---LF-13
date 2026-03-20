@@ -5,10 +5,7 @@ import traffic_simulation.model.Point;
 import traffic_simulation.model.street_network.GridPoint;
 import traffic_simulation.model.street_network.Street;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 
 public class Crossing extends GridPoint {
@@ -31,19 +28,24 @@ public class Crossing extends GridPoint {
                 .filter(street -> street != currentStreet)
                 .toList();
 
+        var sumOfPercentages = possibleStreets.stream()
+                .map(streets::get)
+                .mapToDouble(s -> s)
+                .sum();
 
-        //TODO implement correct choosing logic, not just a random street
-        int randomStreetIndex = possibleStreets.size() == 1 ? 0 : random.nextInt(0, possibleStreets.size() - 1);
-        return possibleStreets.get(randomStreetIndex);
-    }
+        var randomNumber = random.nextInt(1, (int) sumOfPercentages);
 
-    //@Override
-    public ArrayList<GridPoint> getNeighbours() {
-        ArrayList<GridPoint> neighbours = new ArrayList<>();
-        for (Street street : this.streets.keySet()) {
-            neighbours.add(street.getOtherPoint(this));
+        for (Street street : possibleStreets) {
+            int percentage = (int) (double) streets.get(street);
+
+            randomNumber -= percentage;
+
+            if (randomNumber <= 0) {
+                return street;
+            }
         }
-        return neighbours;
+
+        throw new RuntimeException("could not determine next street in crossing");
     }
 
     @Override

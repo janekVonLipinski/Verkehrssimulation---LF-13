@@ -65,7 +65,7 @@ public class InputReader {
                     double x = Double.parseDouble(p[1]);
                     double y = Double.parseDouble(p[2]);
                     //p[3] is das Ziel des Spawnpoints und wird nicht genutzt
-                    double spawnTick = Double.parseDouble(p[4]);
+                    int spawnTick = Integer.parseInt(p[4]);
                     gridPoints.add(new SpawnPoint(new Point(x, y), spawnTick, null, name));
                     continue;
                 }

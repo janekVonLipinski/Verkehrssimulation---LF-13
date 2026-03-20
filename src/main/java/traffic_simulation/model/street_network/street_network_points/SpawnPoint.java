@@ -14,7 +14,7 @@ import java.util.Random;
 public class SpawnPoint extends GridPoint {
     @Getter
     private final String name;
-    private final double spawnTick;
+    private final int spawnTick;
     private final Random random = new Random();
     @Getter
     @Setter
@@ -27,7 +27,7 @@ public class SpawnPoint extends GridPoint {
     private int currentTick = 0;
 
 
-    public SpawnPoint(Point point, double spawnTick, Street street, String name) {
+    public SpawnPoint(Point point, int spawnTick, Street street, String name) {
         super(point,null);
         this.spawnTick = spawnTick;
         this.street = street;

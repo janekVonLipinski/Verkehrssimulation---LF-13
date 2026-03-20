@@ -62,8 +62,8 @@ public class InputReader {
                 if (isspawnPoint) {
                     String[] p = line.split(" ");
                     String name = p[0];
-                    int x = Integer.parseInt(p[1]);
-                    int y = Integer.parseInt(p[2]);
+                    double x = Double.parseDouble(p[1]);
+                    double y = Double.parseDouble(p[2]);
                     //p[3] is das Ziel des Spawnpoints und wird nicht genutzt
                     int spawnTick = Integer.parseInt(p[4]);
                     gridPoints.add(new SpawnPoint(new Point(x, y), spawnTick, null, name));

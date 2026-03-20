@@ -14,12 +14,12 @@ import java.io.IOException;
 
 public class OutPutWriter {
 
-    private static final String BASE_PATH = "src/main/resources/output/";
+    //private static final String BASE_PATH = "src/main/resources/output/";
 
-    public void writePlan(List<Street> streets, String name) {
-        String directoryName = BASE_PATH + name;
-        new File(directoryName).mkdirs();
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryName + "/plan.txt"))) {
+    public void writePlan(List<Street> streets, String pathToOutputDir) {
+        String directoryPath = pathToOutputDir;
+        new File(directoryPath);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryPath + "/plan.txt"))) {
 
             for (Street street : streets) {
                 writeStreet(writer, street);
@@ -29,12 +29,12 @@ public class OutPutWriter {
         }
     }
 
-    public void writeStatistic(List<Street> streets, String name) {
+    public void writeStatistic(List<Street> streets, String pathToOutputDir) {
 
-        String directoryName = BASE_PATH + name;
-        new File(directoryName).mkdirs();
+        String directoryPath = pathToOutputDir;
+        new File(directoryPath);
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryName + "/statistik.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryPath + "/statistik.txt"))) {
             writer.write(
                     "Gesamtanzahl Fahrzeuge pro 100m:"
             );
@@ -58,11 +58,11 @@ public class OutPutWriter {
         }
     }
 
-    public void writeFahrzeuge(int endTimeOfSimulation, List<Car> cars, String name) {
-        String directoryName = BASE_PATH + name;
-        new File(directoryName).mkdirs();
+    public void writeFahrzeuge(int endTimeOfSimulation, List<Car> cars, String pathToOutputDir) {
+        String directoryPath = pathToOutputDir;
+        new File(directoryPath);
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryName + "/fahrzeuge.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(directoryPath + "/fahrzeuge.txt"))) {
 
             Map<Integer, Map<Integer, Map<Point, Point>>> carPositionsPerTimestep = new HashMap<>();
 

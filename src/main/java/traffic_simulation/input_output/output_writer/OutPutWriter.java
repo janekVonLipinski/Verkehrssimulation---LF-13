@@ -14,8 +14,6 @@ import java.io.IOException;
 
 public class OutPutWriter {
 
-    //private static final String BASE_PATH = "src/main/resources/output/";
-
     public void writePlan(List<Street> streets, String pathToOutputDir) {
         String directoryPath = pathToOutputDir;
         new File(directoryPath);

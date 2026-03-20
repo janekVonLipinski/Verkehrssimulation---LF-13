@@ -10,15 +10,16 @@ import java.util.*;
 
 public class Crossing extends GridPoint {
     @Getter
-    private final Map<Street, Double> streets;
-    private final Random random = new Random();
+    private final Map<Street, Integer> streets;
+    private final Random random;
 
-    public Crossing(String name, double x, double y) {
+    public Crossing(String name, double x, double y, Random random) {
         super(new Point(x, y),name);
         this.streets = new HashMap<>();
+        this.random = random;
     }
 
-    public void addStreetToMap(Street street, double probability) {
+    public void addStreetToMap(Street street, int probability) {
         streets.put(street, probability);
     }
 

@@ -6,6 +6,8 @@ import traffic_simulation.model.street_network.Street;
 import traffic_simulation.model.street_network.street_network_points.Crossing;
 import traffic_simulation.model.street_network.street_network_points.SpawnPoint;
 
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CarTest {
@@ -41,7 +43,7 @@ class CarTest {
         SpawnPoint spawnPoint = new SpawnPoint(point_start, 0, null, "");
         SpawnPoint spawnPoint1 = new SpawnPoint(point_end, 0, null,"");
 
-        Crossing crossing = new Crossing(null, point_crossing.getX(), point_crossing.getY());
+        Crossing crossing = new Crossing(null, point_crossing.getX(), point_crossing.getY(), new Random());
 
         Street first_street = new Street(spawnPoint, crossing, 1);
         Street second_street = new Street(crossing, spawnPoint1, 1);

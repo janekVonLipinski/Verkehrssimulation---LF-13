@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import traffic_simulation.model.Point;
 
+import java.util.Objects;
+
 @RequiredArgsConstructor
 @Getter
 public class Street {
@@ -56,5 +58,18 @@ public class Street {
         double totalCarsPerOnehundredMeter = totalCarCounter / streetLength;
 
         return totalCarsPerOnehundredMeter;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Street street = (Street) o;
+        return Double.compare(length, street.length) == 0 && totalCarCounter == street.totalCarCounter && maximumCarCounter == street.maximumCarCounter && Objects.equals(firstPoint, street.firstPoint) && Objects.equals(secondPoint, street.secondPoint);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstPoint, secondPoint, length, totalCarCounter, maximumCarCounter);
     }
 }

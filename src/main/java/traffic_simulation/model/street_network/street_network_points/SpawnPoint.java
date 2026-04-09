@@ -24,7 +24,6 @@ public class SpawnPoint extends GridPoint {
     //TODO rethink this, both street and Point now each other which is inconvenient
     private static final int EXPECTED_VALUE = 45;
     private static final int DEVIATION = 10;
-    private int currentTick = 0;
 
 
     public SpawnPoint(Point point, int spawnTick, Street street, String name) {

@@ -77,7 +77,7 @@ public class InputReader {
                 double x = Double.parseDouble(p[1]);
                 double y = Double.parseDouble(p[2]);
 
-                gridPoints.add(new Crossing(name, x, y));
+                gridPoints.add(new Crossing(name, x, y, new Random()));
             }
         }
         catch (FileNotFoundException e) {
@@ -144,7 +144,7 @@ public class InputReader {
                     //i += 2, weil nach Gridpoint noch Wahrscheinlichkeit angegeben wird
                     for (int i = 3; i < parsed_line.length; i += 2) {
                         String targetName = parsed_line[i];
-                        double probability = Double.parseDouble(parsed_line[i + 1]);
+                        int probability = Integer.parseInt(parsed_line[i + 1]);
 
                         var target = gridPoints.stream()
                                 .filter(a -> targetName.equals(a.getName()))
